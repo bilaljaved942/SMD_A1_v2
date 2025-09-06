@@ -114,7 +114,6 @@
                 android:id="@+id/cameraIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerInParent="true"
                 android:src="@drawable/camera"
                 android:tint="@android:color/darker_gray" />
 
