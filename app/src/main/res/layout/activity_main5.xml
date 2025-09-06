@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:id="@+id/main">
+
+    <!-- Top Status Bar Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:tint="@color/black"
+            android:src="@drawable/time2"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/camIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:tint="@color/black"
+            android:src="@drawable/cam"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="73dp"
+            android:layout_height="83dp"
+            android:tint="@color/black"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/wifi" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
+        android:paddingTop="16dp">
+
+        <ImageView
+            android:id="@+id/camera"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:src="@drawable/camera"
+            android:layout_marginStart="10dp"
+            android:layout_centerInParent="true"
+            android:tint="@color/Red"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Socially"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/Red"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="33dp"
+            android:layout_height="23dp"
+            android:tint="@color/Red"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@id/forward"
+            android:layout_marginEnd="-4dp"
+            android:src="@drawable/img2" />
+
+        <ImageView
+            android:id="@+id/forward"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:tint="@color/Red"
+            android:src="@drawable/img1"
+            android:layout_alignParentEnd="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_vertical" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.4"
+        android:paddingTop="16dp">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Story Item -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="20dp">
+
+                    <!-- Gradient Border Container -->
+                    <FrameLayout
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/create_grad">
+
+                        <!-- White circle background for spacing -->
+                        <FrameLayout
+                            android:layout_width="82dp"
+                            android:layout_height="82dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/white_circle">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="78dp"
+                                android:layout_height="78dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/person" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your Story"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+                <!-- Story Item -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="20dp">
+
+                    <!-- Gradient Border Container -->
+                    <FrameLayout
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/create_grad">
+
+                        <!-- White circle background for spacing -->
+                        <FrameLayout
+                            android:layout_width="82dp"
+                            android:layout_height="82dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/white_circle">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="78dp"
+                                android:layout_height="78dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/person2" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="karennne"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+                <!-- Story Item -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="20dp">
+
+                    <!-- Gradient Border Container -->
+                    <FrameLayout
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/create_grad">
+
+                        <!-- White circle background for spacing -->
+                        <FrameLayout
+                            android:layout_width="82dp"
+                            android:layout_height="82dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/white_circle">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="78dp"
+                                android:layout_height="78dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/person3" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="zackjohn"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+                <!-- Story Item -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="20dp">
+
+                    <!-- Gradient Border Container -->
+                    <FrameLayout
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/create_grad">
+
+                        <!-- White circle background for spacing -->
+                        <FrameLayout
+                            android:layout_width="82dp"
+                            android:layout_height="82dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/white_circle">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="78dp"
+                                android:layout_height="78dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/person4" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="kieron_d"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+                <!-- Story Item -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="20dp">
+
+                    <!-- Gradient Border Container -->
+                    <FrameLayout
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/create_grad">
+
+                        <!-- White circle background for spacing -->
+                        <FrameLayout
+                            android:layout_width="82dp"
+                            android:layout_height="82dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/white_circle">
+
+                            <!-- Profile Image -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="78dp"
+                                android:layout_height="78dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/person5" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your Story"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_vertical" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/person5" />
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="15dp"
+            android:layout_height="22dp"
+            android:src="@drawable/img4"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toEndOf="@id/profileImage"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="joshua_I"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tokyo, Japan"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textStyle="normal"
+                android:layout_below="@id/username"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/verified"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/img3"
+                android:tint="@color/Red"
+                android:layout_toEndOf="@id/username"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/japan"
+            android:scaleType="centerCrop"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.2"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/img5"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/comment"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/img6"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/like" />
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/img1"
+            android:layout_toEndOf="@id/comment" />
+
+        <ImageView
+            android:id="@+id/share2"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:tint="@color/Gray"
+            android:layout_marginTop="12dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/img4"/>
+
+        <ImageView
+            android:id="@+id/save"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:src="@drawable/img7"
+            android:layout_marginTop="12dp"
+            android:layout_alignParentEnd="true" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage2"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/like"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/person2" />
+
+        <TextView
+            android:id="@+id/likesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Liked by"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@id/profileImage2"
+            android:layout_alignTop="@id/profileImage2"
+            android:layout_alignBottom="@id/profileImage2"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="craig_love"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/likesCount"
+            android:layout_alignTop="@id/profileImage2"
+            android:layout_alignBottom="@id/profileImage2"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/and"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="and"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@id/count"
+            android:layout_alignTop="@id/profileImage2"
+            android:layout_alignBottom="@id/profileImage2"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="44.686 others"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/and"
+            android:layout_alignTop="@id/profileImage2"
+            android:layout_alignBottom="@id/profileImage2"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="joshua_I "
+            android:textSize="14sp"
+            android:layout_below="@id/profileImage2"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/caption2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/caption"
+            android:layout_alignBaseline="@id/caption"
+            android:text="The game in Japan was amazing and I want to"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/caption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/caption"
+            android:text="share some photos"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:id="@+id/homeIcon"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:src="@drawable/img8"
+            android:layout_below="@id/line"
+            android:tint="@color/Red"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="25dp"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/homeIcon2"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_below="@id/line"
+            android:layout_marginStart="49dp"
+            android:layout_marginTop="22dp"
+            android:layout_toEndOf="@id/homeIcon"
+            android:src="@drawable/img9"
+            android:tint="@color/Red" />
+
+        <ImageView
+            android:id="@+id/homeIcon3"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/img10"
+            android:tint="@color/Red"
+            android:layout_toEndOf="@id/homeIcon2"
+            android:layout_below="@id/line"
+            android:layout_marginTop="21dp"
+            android:layout_marginStart="47dp"/>
+
+        <ImageView
+            android:id="@+id/homeIcon4"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/img5"
+            android:layout_toEndOf="@id/homeIcon3"
+            android:tint="@color/Red"
+            android:layout_below="@id/line"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="46dp"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage3"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/line"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@id/homeIcon4"
+            android:src="@drawable/person2" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

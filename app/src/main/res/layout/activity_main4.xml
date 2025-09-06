@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:id="@+id/main">
+
+    <!-- Top Status Bar Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:tint="@color/black"
+            android:src="@drawable/time2"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/camIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:tint="@color/black"
+            android:src="@drawable/cam"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="115dp"
+            android:layout_height="65dp"
+            android:tint="@color/black"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="-4dp"
+            android:src="@drawable/wifi" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Socially"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:textColor="@color/Red"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <EditText
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="asad_khasanov"
+            android:paddingStart="20dp"
+            android:background="@drawable/form_input1"
+            android:layout_marginTop="20dp"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"/>
+
+        <EditText
+            android:id="@+id/usernameInput2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Password"
+            android:paddingStart="20dp"
+            android:background="@drawable/form_input1"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/usernameInput"
+            android:inputType="text"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:textColor="@color/LightRed"
+            android:textStyle="bold"
+            android:layout_below="@id/usernameInput2"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:background="@drawable/create_btn"
+            android:backgroundTint="@color/LightRed"
+            android:layout_below="@id/forgotPassword"
+            android:layout_marginTop="16dp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <LinearLayout
+            android:id="@+id/accountSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/doHaveAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have an account?"
+                android:textSize="16sp"
+                android:textColor="@color/Gray" />
+
+            <TextView
+                android:id="@+id/signUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Sign up."
+                android:textSize="16sp"
+                android:textColor="@color/Red"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/orSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@id/accountSection"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="1dp"
+                android:background="@color/LightGray"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/or"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" OR "
+                android:textSize="16sp"
+                android:textColor="@color/Gray"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="1dp"
+                android:background="@color/LightGray"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.8"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Socially"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/Red"
+            android:layout_above="@id/imageView"
+            android:layout_marginBottom="15dp"
+            android:layout_centerHorizontal="true" />
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:id="@+id/main">
+
+    <!-- Top Status Bar Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:tint="@color/black"
+            android:src="@drawable/time2"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/camIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:tint="@color/black"
+            android:src="@drawable/cam"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="115dp"
+            android:layout_height="65dp"
+            android:tint="@color/black"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="-4dp"
+            android:src="@drawable/wifi" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.8"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Socially"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:textColor="@color/Red"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.2"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/person"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:padding="2dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jacob_w"
+            android:textSize="16sp"
+            android:textColor="@color/LightBlack"
+            android:layout_below="@id/profile_image"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:background="@drawable/create_btn"
+            android:backgroundTint="@color/Red"
+            android:layout_below="@id/name"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/switchAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Switch Accounts"
+            android:textSize="16sp"
+            android:textColor="@color/Red"
+            android:layout_below="@id/loginBtn"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.6"
+        android:paddingTop="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/accountSection"
+            android:background="@color/LightGray"
+            android:layout_marginBottom="24dp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
+
+        <LinearLayout
+            android:id="@+id/accountSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@id/imageView"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp">
+
+            <TextView
+                android:id="@+id/doHaveAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have an account?"
+                android:textSize="16sp"
+                android:textColor="@color/LightRed" />
+
+            <TextView
+                android:id="@+id/signUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Sign up."
+                android:textSize="16sp"
+                android:textColor="@color/Red"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
