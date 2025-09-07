@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main">
 
     <!-- Top Status Bar Section -->
@@ -21,7 +19,7 @@
             android:layout_height="30dp"
             android:tint="@color/black"
             android:src="@drawable/time2"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
         <ImageView
@@ -37,10 +35,9 @@
             android:layout_width="73dp"
             android:layout_height="83dp"
             android:tint="@color/black"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/wifi" />
-
 
     </RelativeLayout>
 
@@ -62,7 +59,7 @@
             android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:textColor="@color/Red"
@@ -72,7 +69,7 @@
             android:id="@+id/image2"
             android:layout_width="27dp"
             android:layout_height="27dp"
-            android:layout_toRightOf="@+id/text1"
+            android:layout_toEndOf="@+id/text1"
             android:tint="@color/Red"
             android:src="@drawable/img17" />
 
@@ -119,7 +116,6 @@
             android:layout_marginStart="12dp"
             android:layout_centerVertical="true"/>
 
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -140,7 +136,7 @@
             android:padding="4dp" />
 
         <TextView
-            android:id="@+id/textv1"
+            android:id="@+id/textv1_1"
             android:layout_width="80dp"
             android:layout_height="20dp"
             android:text="joshua_I"
@@ -148,17 +144,17 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle1"/>
+            android:layout_toEndOf="@+id/circle1"/>
 
         <TextView
-            android:id="@+id/textv4"
+            android:id="@+id/textv4_1"
             android:layout_width="180dp"
             android:layout_height="20dp"
             android:text="Have a nice day,bro!"
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle1"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toEndOf="@+id/circle1"
+            android:layout_below="@+id/textv1_1"/>
 
         <ImageView
             android:id="@+id/img3"
@@ -171,13 +167,13 @@
             android:src="@drawable/camera" />
 
         <TextView
-            android:id="@+id/textv5"
+            android:id="@+id/textv5_1"
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:text=". now"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img3"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toStartOf="@+id/img3"
+            android:layout_below="@+id/textv1_1"/>
 
     </RelativeLayout>
 
@@ -195,7 +191,6 @@
             android:src="@drawable/person3"
             android:padding="4dp" />
 
-
         <TextView
             android:id="@+id/textv1_2"
             android:layout_width="80dp"
@@ -205,17 +200,16 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle2_1"/>
-
+            android:layout_toEndOf="@+id/circle2_1"/>
 
         <TextView
             android:id="@+id/textv2_2"
-            android:layout_width="220dp"
+            android:layout_width="200dp"
             android:layout_height="20dp"
             android:text="I heard this is a good movie, s..."
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle2_1"
+            android:layout_toEndOf="@+id/circle2_1"
             android:layout_below="@+id/textv1_2"/>
 
         <ImageView
@@ -229,12 +223,12 @@
             android:src="@drawable/camera" />
 
         <TextView
-            android:id="@+id/textv7"
+            android:id="@+id/textv7_2"
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:text=". now"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img6"
+            android:layout_toStartOf="@+id/img6"
             android:layout_below="@+id/textv1_2"/>
 
     </RelativeLayout>
@@ -253,9 +247,8 @@
             android:src="@drawable/person4"
             android:padding="4dp" />
 
-
         <TextView
-            android:id="@+id/textv1"
+            android:id="@+id/textv1_3"
             android:layout_width="320dp"
             android:layout_height="20dp"
             android:text="martini_rond"
@@ -263,8 +256,7 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle3_1"/>
-
+            android:layout_toEndOf="@+id/circle3_1"/>
 
         <TextView
             android:id="@+id/textv2_3"
@@ -273,8 +265,8 @@
             android:text="See you on the next morning!"
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle3_1"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toEndOf="@+id/circle3_1"
+            android:layout_below="@+id/textv1_3"/>
 
         <ImageView
             android:id="@+id/img7"
@@ -292,8 +284,8 @@
             android:layout_height="20dp"
             android:text=". 15m"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img7"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toStartOf="@+id/img7"
+            android:layout_below="@+id/textv1_3"/>
 
     </RelativeLayout>
 
@@ -321,21 +313,20 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle4_1"/>
-
+            android:layout_toEndOf="@+id/circle4_1"/>
 
         <TextView
             android:id="@+id/textv22"
             android:layout_width="200dp"
             android:layout_height="20dp"
-            android:text="Sounds good"
+            android:text="Sounds good 😂😂😂"
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle4_1"
+            android:layout_toEndOf="@+id/circle4_1"
             android:layout_below="@+id/textv21"/>
 
         <ImageView
-            android:id="@+id/img8"
+            android:id="@+id/img8_4"
             android:layout_width="30dp"
             android:layout_marginEnd="16dp"
             android:layout_height="25dp"
@@ -345,12 +336,12 @@
             android:src="@drawable/camera" />
 
         <TextView
-            android:id="@+id/textv8_3"
+            android:id="@+id/textv8_4"
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:text=". 20m"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img8"
+            android:layout_toStartOf="@+id/img8_4"
             android:layout_below="@+id/textv21"/>
 
     </RelativeLayout>
@@ -371,9 +362,8 @@
             android:background="@drawable/circle_border"
             android:padding="4dp" />
 
-
         <TextView
-            android:id="@+id/textv1"
+            android:id="@+id/textv1_5"
             android:layout_width="180dp"
             android:layout_height="20dp"
             android:text="kiero_d"
@@ -381,21 +371,20 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle5_1"/>
-
+            android:layout_toEndOf="@+id/circle5_1"/>
 
         <TextView
-            android:id="@+id/textv2"
-            android:layout_width="200dp"
+            android:id="@+id/textv2_5"
+            android:layout_width="180dp"
             android:layout_height="20dp"
             android:text="The new design looks cool, b..."
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle5_1"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toEndOf="@+id/circle5_1"
+            android:layout_below="@+id/textv1_5"/>
 
         <ImageView
-            android:id="@+id/img8"
+            android:id="@+id/img8_5"
             android:layout_width="30dp"
             android:layout_marginEnd="16dp"
             android:layout_height="25dp"
@@ -405,13 +394,13 @@
             android:src="@drawable/camera" />
 
         <TextView
-            android:id="@+id/textv8_3"
+            android:id="@+id/textv8_5"
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:text=". 1m"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img8"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toStartOf="@+id/img8_5"
+            android:layout_below="@+id/textv1_5"/>
 
     </RelativeLayout>
 
@@ -432,7 +421,7 @@
             android:padding="4dp" />
 
         <TextView
-            android:id="@+id/textv1"
+            android:id="@+id/textv1_6"
             android:layout_width="180dp"
             android:layout_height="20dp"
             android:text="maxjacobson"
@@ -440,21 +429,20 @@
             android:layout_marginStart="13dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle6_1"/>
-
+            android:layout_toEndOf="@+id/circle6_1"/>
 
         <TextView
-            android:id="@+id/textv2"
+            android:id="@+id/textv2_6"
             android:layout_width="180dp"
             android:layout_height="20dp"
             android:text="Thank you, bro!"
             android:layout_marginStart="13dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/circle6_1"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toEndOf="@+id/circle6_1"
+            android:layout_below="@+id/textv1_6"/>
 
         <ImageView
-            android:id="@+id/img8"
+            android:id="@+id/img8_6"
             android:layout_width="30dp"
             android:layout_marginEnd="16dp"
             android:layout_height="25dp"
@@ -464,13 +452,13 @@
             android:src="@drawable/camera" />
 
         <TextView
-            android:id="@+id/textv8_3"
+            android:id="@+id/textv8_6"
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:text=". 2h"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/img8"
-            android:layout_below="@+id/textv1"/>
+            android:layout_toStartOf="@+id/img8_6"
+            android:layout_below="@+id/textv1_6"/>
 
     </RelativeLayout>
 
@@ -489,10 +477,11 @@
             android:layout_marginStart="18dp"
             android:layout_above="@+id/imageView"
             android:layout_marginBottom="20dp"
-            android:layout_alignLeft="@+id/imageView"
+            android:layout_alignStart="@+id/imageView"
             android:src="@drawable/img16"/>
 
         <TextView
+            android:id="@+id/cameraText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -500,7 +489,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginBottom="25dp"
             android:layout_above="@+id/imageView"
-            android:layout_toRightOf="@+id/camera1"
+            android:layout_toEndOf="@+id/camera1"
             android:text="Camera"/>
 
         <ImageView
@@ -510,7 +499,6 @@
             android:src="@drawable/bar"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true" />
-
 
     </RelativeLayout>
 

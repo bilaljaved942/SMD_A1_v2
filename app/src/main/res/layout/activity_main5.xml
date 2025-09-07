@@ -47,7 +47,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.9"
+        android:layout_weight="1.5"
         android:paddingTop="16dp">
 
         <ImageView
@@ -101,7 +101,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.4"
+        android:layout_weight="3.2"
         android:paddingTop="16dp">
 
         <HorizontalScrollView
@@ -342,7 +342,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.2"
+        android:layout_weight="1.6"
         android:paddingTop="16dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
@@ -419,7 +419,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.2"
+        android:layout_weight="3"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
@@ -565,7 +565,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="1.8">
 
         <View
             android:id="@+id/line"
