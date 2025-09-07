@@ -22,5 +22,11 @@ class MainActivity10 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        // Handler to delay the transition to MainActivity
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent(this, MainActivity11::class.java)
+            startActivity(intent)
+            finish()
+        }, SPLASH_TIMEOUT)
     }
 }
