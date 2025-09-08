@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     // Splash screen timeout duration in milliseconds (3 seconds = 3000ms)
     private companion object {
-        const val SPLASH_TIMEOUT = 3000L
+        const val SPLASH_TIMEOUT = 5000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

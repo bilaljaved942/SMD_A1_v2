@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity8 : AppCompatActivity() {
 
     private companion object {
-        const val SPLASH_TIMEOUT = 3000L
+        const val SPLASH_TIMEOUT = 5000L
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

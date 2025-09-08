@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity11 : AppCompatActivity() {
     private companion object {
-        const val SPLASH_TIMEOUT = 3000L
+        const val SPLASH_TIMEOUT = 5000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,5 +23,11 @@ class MainActivity11 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        // Handler to delay the transition to MainActivity
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent(this, MainActivity12::class.java)
+            startActivity(intent)
+            finish()
+        }, SPLASH_TIMEOUT)
     }
 }

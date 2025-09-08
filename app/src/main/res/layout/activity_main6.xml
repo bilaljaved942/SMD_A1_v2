@@ -214,6 +214,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginEnd="1dp"
                         android:src="@drawable/act6_img1"
                         android:scaleType="centerCrop"/>
 
@@ -221,6 +223,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginEnd="1dp"
                         android:src="@drawable/act6_img2"
                         android:scaleType="centerCrop"/>
                 </LinearLayout>
@@ -229,6 +233,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img3"
                     android:scaleType="centerCrop"/>
             </LinearLayout>
@@ -242,6 +248,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img4"
                     android:scaleType="centerCrop"/>
 
@@ -249,6 +257,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img4_2"
                     android:scaleType="centerCrop"/>
 
@@ -256,6 +266,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img5"
                     android:scaleType="centerCrop"/>
             </LinearLayout>
@@ -269,6 +281,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img6"
                     android:scaleType="centerCrop"/>
 
@@ -276,6 +290,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img7"
                     android:scaleType="centerCrop"/>
 
@@ -283,6 +299,8 @@
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.4"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
                     android:src="@drawable/act6_img8"
                     android:scaleType="centerCrop"/>
             </LinearLayout>
