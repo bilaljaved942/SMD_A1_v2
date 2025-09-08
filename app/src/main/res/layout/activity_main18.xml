@@ -211,6 +211,15 @@
             android:layout_toLeftOf="@+id/icon1"
             android:src="@drawable/img1" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
+
     </RelativeLayout>
 
 </LinearLayout>

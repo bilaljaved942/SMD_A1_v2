@@ -9,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity14 : AppCompatActivity() {
+class MainActivity17 : AppCompatActivity() {
     private companion object {
         const val SPLASH_TIMEOUT = 5000L
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main14)
+        setContentView(R.layout.activity_main17)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -24,7 +24,7 @@ class MainActivity14 : AppCompatActivity() {
         }
         // Handler to delay the transition to MainActivity
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity17::class.java)
+            val intent = Intent(this, MainActivity18::class.java)
             startActivity(intent)
             finish()
         }, SPLASH_TIMEOUT)
