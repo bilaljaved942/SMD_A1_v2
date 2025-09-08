@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirstApp">
         <activity
+            android:name=".MainActivity18"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity14"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity13"
             android:exported="false" />
         <activity
