@@ -24,7 +24,7 @@ class MainActivity14 : AppCompatActivity() {
         }
         // Handler to delay the transition to MainActivity
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity17::class.java)
+            val intent = Intent(this, MainActivity15::class.java)
             startActivity(intent)
             finish()
         }, SPLASH_TIMEOUT)

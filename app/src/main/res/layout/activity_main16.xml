@@ -52,8 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:textStyle="bold"
-            android:textSize="14dp"/>
+            android:textSize="18sp"
+            android:textColor="@color/Red"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/text2"
@@ -61,8 +62,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Edit Profile"
-            android:textSize="16dp"/>
+            android:layout_marginEnd="5dp"
+            android:textSize="18sp"
+            android:textColor="@color/Red"
+            android:text="Recents"/>
+
+        <ImageView
+            android:id="@+id/image2"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_toRightOf="@+id/text2"
+            android:tint="@color/Red"
+            android:src="@drawable/img17" />
 
         <TextView
             android:id="@+id/text3"
@@ -73,79 +84,236 @@
             android:textStyle="bold"
             android:layout_alignParentEnd="true"
             android:textColor="@color/Red"
-            android:text="Done"/>
+            android:text="Next"/>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:paddingStart="10dp">
+        android:layout_weight="4">
 
-        <TextView
-            android:id="@id/text1"
+        <ImageView
+            android:id="@+id/bgImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/person" />
+
+        <!-- Bottom overlay container -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textStyle="bold"
-            android:textSize="14dp"/>
-
-        <TextView
-            android:id="@+id/text2"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Edit Profile"
-            android:textSize="16dp"/>
-
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginEnd="12dp"
-            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/Red"
-            android:text="Done"/>
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Infinity/Loop icon -->
+            <ImageView
+                android:id="@+id/infinityIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/form_input7"
+                android:src="@drawable/img38"
+                android:alpha="0.8"
+                android:layout_marginEnd="15dp"
+                android:padding="8dp"
+                android:tint="@color/white" />
+
+            <!-- Gallery/Grid icon -->
+            <ImageView
+                android:id="@+id/galleryIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/form_input7"
+                android:src="@drawable/img2"
+                android:alpha="0.8"
+                android:layout_marginEnd="15dp"
+                android:padding="8dp"
+                android:tint="@color/white" />
+
+            <!-- Select Multiple text with icon -->
+            <LinearLayout
+                android:id="@+id/selectMultipleLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/form_input7"
+                android:paddingStart="12dp"
+                android:alpha="0.8"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/img39"
+                    android:layout_marginEnd="8dp"
+                    android:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SELECT MULTIPLE"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3.5"
-        android:paddingStart="10dp">
+        android:layout_weight="3.5">
 
-        <TextView
-            android:id="@id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textStyle="bold"
-            android:textSize="14dp"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text2"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Edit Profile"
-            android:textSize="16dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginEnd="12dp"
-            android:textStyle="bold"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/Red"
-            android:text="Done"/>
+                <!-- Row 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+                </LinearLayout>
+
+                <!-- Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+                </LinearLayout>
+
+                <!-- Row 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+                </LinearLayout>
+
+                <!-- Row 4 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_margin="1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/act12_1" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
     </RelativeLayout>
 
@@ -153,15 +321,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
+        android:paddingTop="20dp"
         android:paddingStart="10dp">
 
         <TextView
             android:id="@id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="Libray"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/Red"
             android:textStyle="bold"
-            android:textSize="14dp"/>
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/text2"
@@ -169,19 +340,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Edit Profile"
-            android:textSize="16dp"/>
+            android:textColor="@color/Red"
+            android:text="Photo"
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginEnd="12dp"
+            android:textSize="20dp"
+            android:layout_marginEnd="30dp"
             android:textStyle="bold"
             android:layout_alignParentEnd="true"
             android:textColor="@color/Red"
-            android:text="Done"/>
+            android:text="Video"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
 
     </RelativeLayout>
 
