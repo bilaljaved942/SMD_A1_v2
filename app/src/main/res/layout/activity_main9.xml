@@ -199,7 +199,7 @@
             android:layout_marginStart="10dp"
             android:gravity="center"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="50dp"
             android:text="Hello"
             android:layout_above="@+id/search_bar"
             android:textSize="20dp"
