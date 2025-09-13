@@ -38,7 +38,7 @@ class MainActivity4 : AppCompatActivity() {
         // Click on a TextView → go to MainActivity2
         val textView2 = findViewById<TextView>(R.id.signUp)
         textView2.setOnClickListener {
-            val intent = Intent(this, MainActivity5::class.java)
+            val intent = Intent(this, MainActivity2::class.java)
             startActivity(intent)
         }
     }

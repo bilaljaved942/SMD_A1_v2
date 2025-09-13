@@ -311,6 +311,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@id/imageView"
                     android:layout_width="0dp"
                     android:layout_height="115dp"
                     android:layout_weight="0.6"
@@ -342,55 +343,55 @@
 
         <ImageView
             android:id="@+id/homeIcon"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/img14"
             android:layout_below="@id/line"
             android:tint="@color/Red"
-            android:layout_marginTop="14dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginStart="20dp"
             android:layout_alignParentStart="true" />
 
         <ImageView
             android:id="@+id/homeIcon2"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_below="@id/line"
-            android:layout_marginStart="45dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
             android:layout_toEndOf="@id/homeIcon"
             android:src="@drawable/img13"
             android:tint="@color/Red" />
 
         <ImageView
             android:id="@+id/homeIcon3"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/img10"
             android:tint="@color/Red"
             android:layout_toEndOf="@id/homeIcon2"
             android:layout_below="@id/line"
-            android:layout_marginTop="19dp"
-            android:layout_marginStart="43dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="45dp"/>
 
         <ImageView
             android:id="@+id/homeIcon4"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:src="@drawable/img5"
-            android:layout_toLeftOf="@id/profileImage3"
+            android:layout_toRightOf="@+id/homeIcon3"
             android:tint="@color/Red"
             android:layout_below="@id/line"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="42dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="60dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_below="@id/line"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="15dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/person2" />
 
