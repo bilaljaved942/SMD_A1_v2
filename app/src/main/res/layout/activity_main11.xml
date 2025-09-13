@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:id="@+id/start_section"
         android:layout_width="match_parent"
@@ -43,6 +43,7 @@
 
     </RelativeLayout>
 
+<!--    Following section-->
     <RelativeLayout
         android:id="@+id/follow_section"
         android:layout_width="match_parent"
@@ -901,6 +902,7 @@
 
     </ScrollView>
 
+<!--    Bottom section-->
     <RelativeLayout
         android:id="@+id/bottom_section"
         android:layout_width="match_parent"
@@ -922,7 +924,7 @@
             android:src="@drawable/img14"
             android:layout_below="@id/line"
             android:tint="@color/Red"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:layout_marginStart="25dp"
             android:layout_alignParentStart="true" />
 
@@ -932,7 +934,7 @@
             android:layout_height="27dp"
             android:layout_below="@id/line"
             android:layout_marginStart="49dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="16dp"
             android:layout_toEndOf="@id/homeIcon"
             android:src="@drawable/img9"
             android:tint="@color/Red" />
@@ -945,7 +947,7 @@
             android:tint="@color/Red"
             android:layout_toEndOf="@id/homeIcon2"
             android:layout_below="@id/line"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="47dp"/>
 
         <ImageView
@@ -953,20 +955,20 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/img26"
-            android:layout_toEndOf="@id/homeIcon3"
+            android:layout_toLeftOf="@+id/profileImage3"
             android:tint="@color/Red"
             android:layout_below="@id/line"
-            android:layout_marginTop="18dp"
-            android:layout_marginStart="46dp"/>
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="46dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage3"
             android:layout_width="35dp"
             android:layout_height="40dp"
             android:layout_below="@id/line"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_toEndOf="@id/homeIcon4"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/person2" />
 
         <ImageView

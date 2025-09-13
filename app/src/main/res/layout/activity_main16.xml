@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -88,6 +88,7 @@
 
     </RelativeLayout>
 
+<!--    main image section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -170,6 +171,7 @@
 
     </RelativeLayout>
 
+<!--    image options section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -317,6 +319,7 @@
 
     </RelativeLayout>
 
+<!--    bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

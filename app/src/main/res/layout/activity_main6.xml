@@ -6,7 +6,7 @@
     android:background="@color/off_white"
     android:id="@+id/main">
 
-    <!-- FIXED TOP SECTION - Status Bar -->
+    <!-- TOP SECTION -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -43,7 +43,7 @@
 
     </RelativeLayout>
 
-    <!-- FIXED TOP SECTION - Header -->
+    <!-- search section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -87,7 +87,7 @@
 
     </RelativeLayout>
 
-    <!-- BEST SOLUTION: Using TextView with drawableStart for first box -->
+    <!-- Categories section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -187,7 +187,7 @@
 
     </RelativeLayout>
 
-
+<!--    Feed section-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -330,7 +330,7 @@
 
 
 
-    <!-- FIXED BOTTOM SECTION - Navigation -->
+    <!-- BOTTOM SECTION -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -347,8 +347,8 @@
             android:src="@drawable/img14"
             android:layout_below="@id/line"
             android:tint="@color/Red"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="15dp"
             android:layout_alignParentStart="true" />
 
         <ImageView
@@ -357,7 +357,7 @@
             android:layout_height="33dp"
             android:layout_below="@id/line"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
             android:layout_toEndOf="@id/homeIcon"
             android:src="@drawable/img13"
             android:tint="@color/Red" />
@@ -370,7 +370,7 @@
             android:tint="@color/Red"
             android:layout_toEndOf="@id/homeIcon2"
             android:layout_below="@id/line"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="19dp"
             android:layout_marginStart="43dp"/>
 
         <ImageView
@@ -378,20 +378,20 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/img5"
-            android:layout_toEndOf="@id/homeIcon3"
+            android:layout_toLeftOf="@id/profileImage3"
             android:tint="@color/Red"
             android:layout_below="@id/line"
             android:layout_marginTop="18dp"
-            android:layout_marginStart="42dp"/>
+            android:layout_marginEnd="42dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage3"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_below="@id/line"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/homeIcon4"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="13dp"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/person2" />
 
         <ImageView

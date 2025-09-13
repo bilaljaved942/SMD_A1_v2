@@ -17,6 +17,7 @@
 
     </RelativeLayout>
 
+<!--    Picture and name section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -49,13 +50,14 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:text="03:12"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/text1"
             android:textColor="@color/white"/>
 
     </RelativeLayout>
 
+<!--    Bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

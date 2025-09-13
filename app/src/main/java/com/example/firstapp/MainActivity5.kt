@@ -2,18 +2,13 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity5 : AppCompatActivity() {
-
-    private companion object {
-        const val SPLASH_TIMEOUT = 5000L
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +19,11 @@ class MainActivity5 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Handler to delay the transition to MainActivity
-        Handler(Looper.getMainLooper()).postDelayed({
+        // Click on an ImageView → go back to MainActivity6
+        val imageView = findViewById<ImageView>(R.id.homeIcon2)
+        imageView.setOnClickListener {
             val intent = Intent(this, MainActivity6::class.java)
             startActivity(intent)
-            finish()
-        }, SPLASH_TIMEOUT)
+        }
     }
 }

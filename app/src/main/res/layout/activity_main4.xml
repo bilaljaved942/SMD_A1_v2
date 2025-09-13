@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -44,6 +44,7 @@
     </RelativeLayout>
 
 
+<!--    Header Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -64,6 +65,7 @@
             android:layout_centerHorizontal="true" />
 
         <ImageView
+            android:id="@+id/backArrow"
             android:layout_width="27dp"
             android:layout_height="22dp"
             android:layout_marginBottom="20dp"
@@ -71,6 +73,7 @@
 
     </RelativeLayout>
 
+<!--    Log In Form Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -130,6 +133,7 @@
     </RelativeLayout>
 
 
+<!--    Sign Up section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -202,6 +206,7 @@
 
     </RelativeLayout>
 
+<!--    Bottom Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -6,7 +6,7 @@
     android:background="@color/black"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Status Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -156,12 +156,14 @@
 
     </RelativeLayout>
 
+<!--    bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.1">
 
         <LinearLayout
+            android:id="@+id/search"
             android:layout_width="270dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
@@ -209,8 +211,8 @@
             android:layout_height="30dp"
             android:tint="@color/Red"
             android:layout_marginTop="21dp"
-            android:layout_marginEnd="1dp"
-            android:layout_toLeftOf="@+id/icon1"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/search"
             android:src="@drawable/img1" />
 
         <ImageView

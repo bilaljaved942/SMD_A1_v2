@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -43,6 +43,7 @@
 
     </RelativeLayout>
 
+<!--    Chat detail section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -111,6 +112,7 @@
         android:paddingStart="10dp">
     </RelativeLayout>
 
+<!--    Bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -194,12 +196,13 @@
 
         <TextView
             android:id="@+id/circle51"
-            android:layout_width="95dp"
-            android:layout_height="55dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:gravity="center"
+            android:padding="12dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="10dp"
             android:text="Hello"
             android:layout_above="@+id/search_bar"
             android:textSize="20dp"

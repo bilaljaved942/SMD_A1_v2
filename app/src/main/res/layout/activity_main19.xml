@@ -6,7 +6,7 @@
     android:background="@color/black"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -39,6 +39,7 @@
 
     </RelativeLayout>
 
+<!--    mid section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -139,6 +140,7 @@
     </RelativeLayout>
 
 
+<!--    bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,6 +41,7 @@
 
     </RelativeLayout>
 
+<!--    Top options-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -77,6 +78,7 @@
 
     </RelativeLayout>
 
+<!--    Profile image section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -107,6 +109,7 @@
 
     </RelativeLayout>
 
+<!--    form 1 section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -263,6 +266,7 @@
 
     </RelativeLayout>
 
+<!--    form 2 section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

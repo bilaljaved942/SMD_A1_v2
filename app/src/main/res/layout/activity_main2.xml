@@ -6,7 +6,7 @@
     android:background="@color/Red"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top section -->
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
 
     </RelativeLayout>
 
-    <!-- Header Section (Back arrow, Title, Subtitle, Circle) -->
+    <!-- Header Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -54,7 +54,6 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-        <!-- Back Arrow and Title Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,14 +79,12 @@
                 android:textStyle="bold"
                 android:gravity="center" />
 
-            <!-- Invisible view to balance the layout -->
             <View
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
 
         </LinearLayout>
 
-        <!-- Subtitle -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,7 +107,7 @@
                 android:src="@drawable/camera_shape"
                 android:padding="20dp" />
 
-            <!-- Camera Icon (centered in the circle) -->
+            <!-- Camera Icon -->
             <ImageView
                 android:id="@+id/cameraIcon"
                 android:layout_width="40dp"
@@ -310,7 +307,7 @@
 
     </ScrollView>
 
-    <!-- Button Section -->
+    <!-- Button and bottom Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

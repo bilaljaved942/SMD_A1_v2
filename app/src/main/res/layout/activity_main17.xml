@@ -6,7 +6,7 @@
     android:background="@color/black"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -111,7 +111,7 @@
             android:layout_height="60dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="40dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/icon2"
             android:layout_gravity="center">
@@ -147,7 +147,7 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@+id/icon4"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="40dp"
             android:layout_marginBottom="50dp"
             android:background="@drawable/circle_border2"
             android:src="@drawable/flash"
@@ -158,6 +158,7 @@
 
     </RelativeLayout>
 
+<!--    Bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

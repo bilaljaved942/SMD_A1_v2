@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:id="@+id/main">
 
-    <!-- Top Status Bar Section -->
+    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,6 +41,7 @@
 
     </RelativeLayout>
 
+<!--    name section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -84,6 +85,7 @@
 
     </RelativeLayout>
 
+<!--    search section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -404,6 +406,7 @@
 
     </RelativeLayout>
 
+<!--    Chat sections-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -462,6 +465,7 @@
 
     </RelativeLayout>
 
+<!--    Bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
