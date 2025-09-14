@@ -170,6 +170,7 @@
 
                     <!-- Gradient Border Container -->
                     <FrameLayout
+                        android:id="@+id/frame1"
                         android:layout_width="86dp"
                         android:layout_height="86dp"
                         android:background="@drawable/create_grad">

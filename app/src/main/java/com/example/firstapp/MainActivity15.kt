@@ -31,5 +31,11 @@ class MainActivity15 : AppCompatActivity() {
             val intent = Intent(this, MainActivity13::class.java)
             startActivity(intent)
         }
+
+        var textView2=findViewById<TextView>(R.id.text2_1)
+        textView2.setOnClickListener {
+            val intent = Intent(this, MainActivity16::class.java)
+            startActivity(intent)
+        }
     }
 }

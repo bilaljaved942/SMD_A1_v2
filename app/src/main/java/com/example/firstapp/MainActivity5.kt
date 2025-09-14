@@ -2,6 +2,7 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -46,6 +47,13 @@ class MainActivity5 : AppCompatActivity() {
         // Click on an ImageView → go to MainActivity8
         findViewById<ImageView>(R.id.forward).setOnClickListener {
             val intent = Intent(this, MainActivity8::class.java)
+            startActivity(intent)
+        }
+
+        //opening the story
+        var frame1=findViewById<FrameLayout>(R.id.frame1)
+        frame1.setOnClickListener {
+            val intent = Intent(this, MainActivity18::class.java)
             startActivity(intent)
         }
 

@@ -2,6 +2,7 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -38,6 +39,24 @@ class MainActivity13 : AppCompatActivity() {
         var textView=findViewById<TextView>(R.id.text2_5)
         textView.setOnClickListener {
             val intent = Intent(this, MainActivity15::class.java)
+            startActivity(intent)
+        }
+
+        var story=findViewById<FrameLayout>(R.id.img3_1)
+        story.setOnClickListener {
+            val intent = Intent(this, MainActivity14::class.java)
+            startActivity(intent)
+        }
+
+        var story2=findViewById<FrameLayout>(R.id.img3_2)
+        story2.setOnClickListener {
+            val intent = Intent(this, MainActivity19::class.java)
+            startActivity(intent)
+        }
+
+        var personalStory=findViewById<FrameLayout>(R.id.img1)
+        personalStory.setOnClickListener {
+            val intent = Intent(this, MainActivity20::class.java)
             startActivity(intent)
         }
     }
