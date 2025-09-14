@@ -2,6 +2,7 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,16 @@ class MainActivity11 : AppCompatActivity() {
         val profileImage = findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.profileImage3)
         profileImage.setOnClickListener {
             val intent = Intent(this, MainActivity13::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<ImageView>(R.id.homeIcon).setOnClickListener {
+            val intent = Intent(this, MainActivity5::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<ImageView>(R.id.homeIcon2).setOnClickListener {
+            val intent = Intent(this, MainActivity6::class.java)
             startActivity(intent)
         }
     }

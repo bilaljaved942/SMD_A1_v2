@@ -2,6 +2,8 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,6 +18,27 @@ class MainActivity13 : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+
+        findViewById<ImageView>(R.id.homeIcon).setOnClickListener {
+            val intent = Intent(this, MainActivity5::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<ImageView>(R.id.homeIcon2).setOnClickListener {
+            val intent = Intent(this, MainActivity6::class.java)
+            startActivity(intent)
+        }
+        findViewById<ImageView>(R.id.homeIcon4).setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
+            startActivity(intent)
+        }
+
+        var textView=findViewById<TextView>(R.id.text2_5)
+        textView.setOnClickListener {
+            val intent = Intent(this, MainActivity15::class.java)
+            startActivity(intent)
         }
     }
 }

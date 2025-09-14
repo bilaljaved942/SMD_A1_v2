@@ -49,6 +49,7 @@ class MainActivity5 : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // going to profile screen
         val profileImage = findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.profileImage3)
         profileImage.setOnClickListener {
             val intent = Intent(this, MainActivity13::class.java)
