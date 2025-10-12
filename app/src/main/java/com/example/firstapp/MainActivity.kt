@@ -2,6 +2,8 @@ package com.example.firstapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,14 +23,23 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Fetching image from xml
+        // Fetching image from XML
         val logoImageView = findViewById<ImageView>(R.id.imageView3)
 
-        // On click listener
+        // Optional: manual click to skip splash
         logoImageView.setOnClickListener {
-            val intent = Intent(this, MainActivity2::class.java)
-            startActivity(intent)
-
+            moveToNextActivity()
         }
+
+        // Auto move after 5 seconds (5000 ms)
+        Handler(Looper.getMainLooper()).postDelayed({
+            moveToNextActivity()
+        }, 5000)
+    }
+
+    private fun moveToNextActivity() {
+        val intent = Intent(this, MainActivity3::class.java)
+        startActivity(intent)
+        finish() // Close splash so user can’t go back to it
     }
 }

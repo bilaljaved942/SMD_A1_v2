@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "963312875975",
+    "project_id": "smd-ass2-23af5",
+    "storage_bucket": "smd-ass2-23af5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963312875975:android:3e0d9047a9a395c57b81e2",
+        "android_client_info": {
+          "package_name": "com.example.firstapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWwNCyfwHsmzQCH1Z0tW0ePICL_ZTj23M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
