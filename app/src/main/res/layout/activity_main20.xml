@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/black"
     android:id="@+id/main">
 
-    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,6 +19,7 @@
             android:layout_width="30dp"
             android:layout_height="33dp"
             android:src="@drawable/time2"
+            android:tint="@color/white"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
@@ -27,6 +28,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/cam"
+            android:tint="@color/white"
             android:layout_centerInParent="true"/>
 
         <ImageView
@@ -35,28 +37,30 @@
             android:layout_height="53dp"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+            android:tint="@color/white"
             android:src="@drawable/wifi" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
         android:layout_weight="5">
 
         <ImageView
-            android:id="@+id/bgImage"
+            android:id="@+id/story_full_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:clipToOutline="true"
-            android:alpha="0.7"
-            android:src="@drawable/bird" />
+            android:src="@drawable/bird"
+            android:contentDescription="Story Media"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <View
             android:id="@+id/line1"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="3dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -80,10 +84,11 @@
             android:layout_marginTop="20dp"
             android:layout_marginStart="12dp"
             android:src="@drawable/act20_1"
+            android:contentDescription="Profile Picture"
             />
 
         <TextView
-            android:id="@+id/t1"
+            android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="gursky.studio"
@@ -95,8 +100,19 @@
             android:textColor="@color/white"
             />
 
+        <ImageView
+            android:id="@+id/verified"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/text1"
+            android:layout_below="@+id/line2"
+            android:tint="@color/white"
+            android:src="@drawable/img3"
+            android:contentDescription="Verified Icon"/>
+
         <TextView
-            android:id="@+id/t2"
+            android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="11h"
@@ -109,29 +125,18 @@
             />
 
         <ImageView
-            android:id="@+id/verified"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@+id/t1"
-            android:layout_below="@+id/line2"
-            android:tint="@color/white"
-            android:src="@drawable/img3"/>
-
-        <ImageView
-            android:id="@+id/image1"
+            android:id="@+id/story_close_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
+            android:tint="@color/white"
             android:src="@drawable/act19_1"
+            android:contentDescription="Close Story"
             />
-
-
     </RelativeLayout>
 
-<!--    Bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -144,42 +149,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/act20_2"
-            />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/act20_3"
-            android:layout_toLeftOf="@+id/imageView3"
-            android:tint="@color/LightRed"
-            />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="13dp"
-            android:src="@drawable/act20_4"
-            android:layout_toLeftOf="@+id/imageView4"
-            android:tint="@color/LightRed"
-            />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
-            android:src="@drawable/act20_5"
-            android:layout_toLeftOf="@+id/imageView5"
-            android:tint="@color/LightRed"
+            android:contentDescription="Activity"
             />
 
         <ImageView
@@ -192,39 +162,54 @@
             android:src="@drawable/act19_7"
             android:tint="@color/LightRed"
             android:layout_alignParentEnd="true"
-            />
+            android:contentDescription="More"/>
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="10dp"
-            android:src="@drawable/bar"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            />
+            android:id="@+id/imageView4"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:src="@drawable/act20_5"
+            android:layout_toLeftOf="@+id/imageView5"
+            android:tint="@color/LightRed"
+            android:contentDescription="Highlight"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="13dp"
+            android:src="@drawable/act20_4"
+            android:layout_toLeftOf="@+id/imageView4"
+            android:tint="@color/LightRed"
+            android:contentDescription="Facebook"/>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="19dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/act20_3"
+            android:layout_toLeftOf="@+id/imageView3"
+            android:tint="@color/LightRed"
+            android:contentDescription="Create"/>
+
 
         <TextView
-            android:id="@+id/text1"
+            android:id="@+id/text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="10dp"
             android:layout_below="@+id/imageView2"
-            android:layout_toLeftOf="@+id/text2"
-            android:text="Create"/>
-
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="10dp"
-            android:layout_below="@+id/imageView2"
-            android:layout_toLeftOf="@+id/text3"
-            android:text="Facebook"/>
-
+            android:layout_marginEnd="12dp"
+            android:layout_alignParentEnd="true"
+            android:text="More"/>
 
         <TextView
             android:id="@+id/text3"
@@ -237,15 +222,36 @@
             android:text="Highlight"/>
 
         <TextView
-            android:id="@+id/text4"
+            android:id="@+id/text2_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:layout_below="@+id/imageView2"
-            android:layout_marginEnd="12dp"
-            android:layout_alignParentEnd="true"
-            android:text="More"/>
+            android:layout_toLeftOf="@+id/text3"
+            android:layout_marginEnd="10dp"
+            android:text="Facebook"/>
 
+
+        <TextView
+            android:id="@+id/text1_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_below="@+id/imageView2"
+            android:layout_toLeftOf="@+id/text2_bottom"
+            android:layout_marginEnd="10dp"
+            android:text="Create"/>
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="Indicator"
+            />
 
     </RelativeLayout>
 

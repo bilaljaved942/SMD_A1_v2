@@ -107,7 +107,7 @@
             android:src="@drawable/img37"/>
 
         <FrameLayout
-            android:id="@+id/icon3"
+            android:id="@+id/capture_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="20dp"

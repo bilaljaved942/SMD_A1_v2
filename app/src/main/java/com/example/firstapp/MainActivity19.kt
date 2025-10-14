@@ -1,29 +1,122 @@
 package com.example.firstapp
 
 import android.content.Intent
-import android.media.Image
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseAuth
+import java.io.ByteArrayOutputStream
+
+
 class MainActivity19 : AppCompatActivity() {
+
+    private var mediaUri: Uri? = null
+    private var isVideo: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main19)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // ... (Window insets setup) ...
+
+        val previewImageView = findViewById<ImageView>(R.id.preview_image_view)
+
+        // 1. Get media URI and IS_VIDEO flag
+        val uriString = intent.getStringExtra("MEDIA_URI")
+        mediaUri = uriString?.let { Uri.parse(it) }
+        isVideo = intent.getBooleanExtra("IS_VIDEO", false)
+
+        // 2. Display the media preview
+        if (mediaUri != null) {
+            Glide.with(this)
+                .load(mediaUri)
+                .centerCrop()
+                .into(previewImageView)
+        } else {
+            Toast.makeText(this, "Error: No media selected.", Toast.LENGTH_LONG).show()
         }
 
-        var image=findViewById<ImageView>(R.id.icon1)
-        image.setOnClickListener {
-            val intent = Intent(this, MainActivity13::class.java)
-            startActivity(intent)
+        val shareToStoryButton = findViewById<ImageView>(R.id.your_stories_icon)
+        shareToStoryButton.setOnClickListener {
+            val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+            if (currentFirebaseUser == null) { Toast.makeText(this, "Please log in.", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+
+            if (mediaUri != null) {
+                val base64String = encodeMediaToBase64(mediaUri!!, isVideo)
+
+                if (base64String != null) {
+                    saveStoryToDatabase(base64String, currentFirebaseUser.uid, isVideo)
+                } else {
+                    val failureMsg = if (isVideo) "Video file is too large for Base64." else "Failed to encode image."
+                    Toast.makeText(this, failureMsg, Toast.LENGTH_LONG).show()
+                }
+            }
         }
+        // ... (Existing navigation) ...
+    }
+
+    private fun encodeMediaToBase64(uri: Uri, isVideo: Boolean): String? {
+        // Encoding logic (unchanged)
+        if (isVideo) {
+            // Video (warning: large files will fail)
+            try {
+                contentResolver.openInputStream(uri)?.use { inputStream ->
+                    val byteArray = inputStream.readBytes()
+                    return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+                }
+            } catch (e: Exception) { return null }
+            return null
+        } else {
+            // Image
+            val bitmap: Bitmap = try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+                } else {
+                    MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                }
+            } catch (e: Exception) { return null }
+
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+            return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+        }
+    }
+
+    private fun saveStoryToDatabase(base64String: String, userId: String, isVideo: Boolean) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("stories")
+        val storyId = databaseRef.push().key ?: return
+
+        val story = Story(
+            id = storyId,
+            userId = userId,
+            imageUrl = base64String,
+            timestamp = System.currentTimeMillis(),
+            isVideo = isVideo // CRITICAL FIX APPLIED
+        )
+
+        databaseRef.child(storyId).setValue(story)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Story shared successfully!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity5::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
+                finish()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Database error: ${it.message}", Toast.LENGTH_LONG).show()
+            }
     }
 }

@@ -1,51 +1,160 @@
 package com.example.firstapp
 
-import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import androidx.activity.enableEdgeToEdge
+import com.google.firebase.auth.FirebaseAuth
+
 
 class MainActivity20 : AppCompatActivity() {
+
+    // --- CRITICAL FIX: Ensure all variables are correctly declared as class members ---
+    private lateinit var storyImageView: ImageView
+    private lateinit var closeButton: ImageView
+    private lateinit var usernameTextView: TextView
+    private lateinit var timeTextView: TextView
+
+    // The list that was causing the error
+    private var storiesList = mutableListOf<Story>()
+    private var currentStoryIndex = 0
+
+    // Handler for the 15-second story duration (Splash Screen Logic for testing)
+    private val handler = Handler(Looper.getMainLooper())
+    private val storyDurationMs = 15 * 1000L
+
+    private val storyAdvancer = Runnable {
+        showNextStory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main20)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Initialize UI elements
+        storyImageView = findViewById(R.id.story_full_image)
+        closeButton = findViewById(R.id.story_close_button)
+        usernameTextView = findViewById(R.id.text1)
+        timeTextView = findViewById(R.id.text2)
+
+        val viewUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (viewUserId != null) {
+            loadUserStories(viewUserId)
+        } else {
+            Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_SHORT).show()
+            finish()
         }
 
-        // Image that goes back to MainActivity13
-        val image1 = findViewById<ImageView>(R.id.image1)
-        image1.setOnClickListener {
-            moveToMainActivity13()
+        closeButton.setOnClickListener {
+            finish()
         }
 
-        // Image that goes to MainActivity21
-        val image2 = findViewById<ImageView>(R.id.imageView1)
-        image2.setOnClickListener {
-            val intent = Intent(this, MainActivity21::class.java)
-            startActivity(intent)
-            finish() // remove from back stack
+        storyImageView.setOnClickListener {
+            showNextStory()
         }
-
-        // Automatically move back after 5 seconds (like an Instagram story)
-        Handler(Looper.getMainLooper()).postDelayed({
-            moveToMainActivity13()
-        }, 5000)
     }
 
-    private fun moveToMainActivity13() {
-        val intent = Intent(this, MainActivity13::class.java)
-        startActivity(intent)
-        finish() // remove this screen from back stack
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(storyAdvancer)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (storiesList.isNotEmpty() && currentStoryIndex < storiesList.size) {
+            handler.postDelayed(storyAdvancer, storyDurationMs)
+        }
+    }
+
+    private fun loadUserStories(userId: String) {
+        val currentTime = System.currentTimeMillis()
+        val expirationTimeMs = 15 * 1000L
+        val expirationThreshold = currentTime - expirationTimeMs
+
+        FirebaseDatabase.getInstance().getReference("stories")
+            .orderByChild("userId")
+            .equalTo(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    storiesList.clear()
+                    for (storySnapshot in snapshot.children) {
+                        val story = storySnapshot.getValue(Story::class.java)
+                        if (story != null && story.timestamp > expirationThreshold) {
+                            storiesList.add(story)
+                        }
+                    }
+
+                    if (storiesList.isNotEmpty()) {
+                        storiesList.sortBy { it.timestamp }
+                        showStory(0)
+                    } else {
+                        Toast.makeText(this@MainActivity20, "You have no active stories.", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@MainActivity20, "Failed to load stories: ${error.message}", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            })
+    }
+
+    private fun showStory(index: Int) {
+        // The fix is guaranteed because storiesList is now correctly positioned in the class definition.
+        if (index < 0 || index >= storiesList.size) {
+            finish()
+            return
+        }
+
+        currentStoryIndex = index
+        val story = storiesList[index]
+
+        // Update Header
+        usernameTextView.text = "Your Story"
+        timeTextView.text = "Just now"
+
+        // Base64 Decode and display
+        try {
+            val base64String = story.imageUrl
+            if (base64String.isNotEmpty() && base64String.length > 100) {
+                val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+                if (imageBytes.isNotEmpty()) {
+                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    storyImageView.setImageBitmap(bitmap)
+                } else {
+                    storyImageView.setImageResource(R.drawable.person)
+                }
+            } else {
+                storyImageView.setImageResource(R.drawable.person)
+            }
+        } catch (e: Exception) {
+            storyImageView.setImageResource(R.drawable.person)
+        }
+
+        // Reset and start the 15-second timer for the current story
+        handler.removeCallbacks(storyAdvancer)
+        handler.postDelayed(storyAdvancer, storyDurationMs)
+    }
+
+    private fun showNextStory() {
+        if (currentStoryIndex < storiesList.size - 1) {
+            showStory(currentStoryIndex + 1)
+        } else {
+            // Reached the end of the user's stories, close the viewer
+            finish()
+        }
     }
 }

@@ -6,7 +6,6 @@
     android:background="@color/black"
     android:id="@+id/main">
 
-    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,6 +18,8 @@
             android:layout_width="30dp"
             android:layout_height="33dp"
             android:src="@drawable/time2"
+            android:tint="@color/white"
+            android:contentDescription="Time"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
@@ -27,35 +28,37 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/cam"
+            android:tint="@color/white"
+            android:contentDescription="Camera Icon"
             android:layout_centerInParent="true"/>
 
         <ImageView
-            android:id="@+id/batteryIcon"
+            android:id="@+id/wifiIcon"
             android:layout_width="53dp"
             android:layout_height="53dp"
+            android:tint="@color/white"
+            android:contentDescription="Wifi and Battery"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/wifi" />
 
     </RelativeLayout>
 
-<!--    mid section-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
         android:layout_weight="5">
 
         <ImageView
-            android:id="@+id/bgImage"
+            android:id="@+id/preview_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:clipToOutline="true"
-            android:alpha="0.7"
-            android:src="@drawable/bird" />
+            android:src="@drawable/bird"
+            android:contentDescription="Story Media Preview" />
 
         <ImageView
-            android:id="@+id/icon1"
+            android:id="@+id/cancel_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="7dp"
@@ -63,7 +66,8 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_1" />
+            android:src="@drawable/act19_1"
+            android:contentDescription="Cancel Button" />
 
         <ImageView
             android:id="@+id/icon2"
@@ -75,7 +79,8 @@
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@+id/icon3"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_2" />
+            android:src="@drawable/act19_2"
+            android:contentDescription="Text Tool" />
 
         <ImageView
             android:id="@+id/icon3"
@@ -87,7 +92,8 @@
             android:tint="@color/LightRed"
             android:layout_marginStart="7dp"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_3" />
+            android:src="@drawable/act19_3"
+            android:contentDescription="Sticker Tool" />
 
         <ImageView
             android:id="@+id/icon4"
@@ -99,7 +105,8 @@
             android:layout_toLeftOf="@+id/icon5"
             android:tint="@color/LightRed"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_4" />
+            android:src="@drawable/act19_4"
+            android:contentDescription="Music Tool" />
 
         <ImageView
             android:id="@+id/icon5"
@@ -111,7 +118,8 @@
             android:layout_toLeftOf="@+id/icon6"
             android:tint="@color/LightRed"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_5" />
+            android:src="@drawable/act19_5"
+            android:contentDescription="Filter Tool" />
 
         <ImageView
             android:id="@+id/icon6"
@@ -123,7 +131,8 @@
             android:layout_toLeftOf="@+id/icon7"
             android:tint="@color/LightRed"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_6" />
+            android:src="@drawable/act19_6"
+            android:contentDescription="Draw Tool" />
 
         <ImageView
             android:id="@+id/icon7"
@@ -135,30 +144,32 @@
             android:layout_alignParentEnd="true"
             android:tint="@color/LightRed"
             android:background="@drawable/circle_6"
-            android:src="@drawable/act19_7" />
+            android:src="@drawable/act19_7"
+            android:contentDescription="More Options Tool" />
 
     </RelativeLayout>
 
 
-<!--    bottom section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.2">
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/your_stories_icon"
             android:layout_width="150dp"
             android:layout_height="60dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/act19_8"
+            android:contentDescription="Share to Your Stories"
             />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/close_friends_icon"
             android:layout_width="150dp"
             android:layout_height="60dp"
             android:src="@drawable/act19_9"
+            android:contentDescription="Share to Close Friends"
             android:layout_toLeftOf="@+id/imageView3"
             />
 
@@ -172,6 +183,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/circle_7"
             android:src="@drawable/act19_10"
+            android:contentDescription="Send Message"
             android:layout_alignParentEnd="true"
             />
 
@@ -180,10 +192,10 @@
             android:layout_width="150dp"
             android:layout_height="10dp"
             android:src="@drawable/bar"
+            android:contentDescription="Navigation Bar Indicator"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             />
-
     </RelativeLayout>
 
 </LinearLayout>

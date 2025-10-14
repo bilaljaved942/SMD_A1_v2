@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/main">
 
-    <!-- Top Section -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,6 +21,7 @@
             android:layout_height="30dp"
             android:tint="@color/black"
             android:src="@drawable/time2"
+            android:contentDescription="Time"
             android:layout_centerInParent="true"
             android:layout_alignParentStart="true" />
 
@@ -30,21 +31,20 @@
             android:layout_height="15dp"
             android:tint="@color/black"
             android:src="@drawable/cam"
+            android:contentDescription="Camera Icon"
             android:layout_centerInParent="true"/>
 
         <ImageView
-            android:id="@+id/batteryIcon"
+            android:id="@+id/wifiIcon"
             android:layout_width="73dp"
             android:layout_height="83dp"
             android:tint="@color/black"
+            android:contentDescription="Wifi and Battery"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/wifi" />
-
-
     </RelativeLayout>
 
-<!--    Icons Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -56,6 +56,7 @@
             android:layout_width="30dp"
             android:layout_height="25dp"
             android:src="@drawable/camera"
+            android:contentDescription="Camera"
             android:layout_marginStart="10dp"
             android:layout_centerInParent="true"
             android:tint="@color/Red"
@@ -76,6 +77,7 @@
             android:layout_width="33dp"
             android:layout_height="23dp"
             android:tint="@color/Red"
+            android:contentDescription="Notifications"
             android:layout_centerInParent="true"
             android:layout_toStartOf="@id/forward"
             android:layout_marginEnd="-4dp"
@@ -87,6 +89,7 @@
             android:layout_height="25dp"
             android:layout_centerInParent="true"
             android:tint="@color/Red"
+            android:contentDescription="Direct Messages"
             android:src="@drawable/img1"
             android:layout_alignParentEnd="true" />
 
@@ -96,243 +99,33 @@
             android:background="@color/LightGray"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_vertical" />
-
     </RelativeLayout>
 
-<!--    Story Action-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3.2"
         android:paddingTop="16dp">
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/stories_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="130dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Story Item -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="20dp">
-
-                    <!-- Gradient Border Container -->
-                    <FrameLayout
-                        android:layout_width="86dp"
-                        android:layout_height="86dp"
-                        android:background="@drawable/create_grad">
-
-                        <!-- White circle background for spacing -->
-                        <FrameLayout
-                            android:layout_width="82dp"
-                            android:layout_height="82dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/white_circle">
-
-                            <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="78dp"
-                                android:layout_height="78dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/person" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Your Story"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-
-                <!-- Story Item -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="20dp">
-
-                    <!-- Gradient Border Container -->
-                    <FrameLayout
-                        android:id="@+id/frame1"
-                        android:layout_width="86dp"
-                        android:layout_height="86dp"
-                        android:background="@drawable/create_grad">
-
-                        <!-- White circle background for spacing -->
-                        <FrameLayout
-                            android:layout_width="82dp"
-                            android:layout_height="82dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/white_circle">
-
-                            <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="78dp"
-                                android:layout_height="78dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/person2" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="karennne"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-
-                <!-- Story Item -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="20dp">
-
-                    <!-- Gradient Border Container -->
-                    <FrameLayout
-                        android:layout_width="86dp"
-                        android:layout_height="86dp"
-                        android:background="@drawable/create_grad">
-
-                        <!-- White circle background for spacing -->
-                        <FrameLayout
-                            android:layout_width="82dp"
-                            android:layout_height="82dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/white_circle">
-
-                            <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="78dp"
-                                android:layout_height="78dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/person3" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="zackjohn"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-
-                <!-- Story Item -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="20dp">
-
-                    <!-- Gradient Border Container -->
-                    <FrameLayout
-                        android:layout_width="86dp"
-                        android:layout_height="86dp"
-                        android:background="@drawable/create_grad">
-
-                        <!-- White circle background for spacing -->
-                        <FrameLayout
-                            android:layout_width="82dp"
-                            android:layout_height="82dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/white_circle">
-
-                            <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="78dp"
-                                android:layout_height="78dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/person4" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="kieron_d"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-
-                <!-- Story Item -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="20dp">
-
-                    <!-- Gradient Border Container -->
-                    <FrameLayout
-                        android:layout_width="86dp"
-                        android:layout_height="86dp"
-                        android:background="@drawable/create_grad">
-
-                        <!-- White circle background for spacing -->
-                        <FrameLayout
-                            android:layout_width="82dp"
-                            android:layout_height="82dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/white_circle">
-
-                            <!-- Profile Image -->
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="78dp"
-                                android:layout_height="78dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/person5" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Your Story"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-                </LinearLayout>
-
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_vertical" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -356,13 +149,17 @@
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/person5" />
+            app:civ_border_width="0dp"
+            android:src="@drawable/person5"
+            android:contentDescription="Post User Profile Image" />
 
         <ImageView
-            android:id="@+id/batteryIcon"
+            android:id="@+id/postMenuIcon"
             android:layout_width="15dp"
             android:layout_height="22dp"
             android:src="@drawable/img4"
+            android:tint="@color/Gray"
+            android:contentDescription="More Options"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
             android:layout_alignParentEnd="true" />
@@ -385,6 +182,7 @@
                 android:layout_marginStart="10dp"/>
 
             <TextView
+                android:id="@+id/location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tokyo, Japan"
@@ -400,27 +198,27 @@
                 android:layout_height="25dp"
                 android:src="@drawable/img3"
                 android:tint="@color/Red"
+                android:contentDescription="Verified Icon"
                 android:layout_toEndOf="@id/username"/>
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-<!--    Image post section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5">
 
         <ImageView
-            android:id="@+id/batteryIcon"
+            android:id="@+id/postImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/japan"
+            android:contentDescription="User Post"
             android:scaleType="centerCrop"/>
     </RelativeLayout>
 
-<!--    Like comment section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -434,6 +232,8 @@
             android:layout_height="23dp"
             android:layout_centerVertical="true"
             android:src="@drawable/img5"
+            android:tint="@color/Red"
+            android:contentDescription="Like Button"
             android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
@@ -443,6 +243,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/img6"
+            android:contentDescription="Comment Button"
             android:layout_marginStart="7dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/like" />
@@ -454,22 +255,27 @@
             android:layout_marginStart="7dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/img1"
+            android:tint="@color/Red"
+            android:contentDescription="Share Button"
             android:layout_toEndOf="@id/comment" />
 
         <ImageView
-            android:id="@+id/share2"
+            android:id="@+id/indicator"
             android:layout_width="25dp"
             android:layout_height="20dp"
             android:tint="@color/Gray"
             android:layout_marginTop="12dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/img4"/>
+            android:src="@drawable/img4"
+            android:contentDescription="Image Indicator"/>
 
         <ImageView
             android:id="@+id/save"
             android:layout_width="25dp"
             android:layout_height="20dp"
             android:src="@drawable/img7"
+            android:tint="@color/Red"
+            android:contentDescription="Save Button"
             android:layout_marginTop="12dp"
             android:layout_alignParentEnd="true" />
 
@@ -479,7 +285,9 @@
             android:layout_height="40dp"
             android:layout_below="@id/like"
             android:layout_marginTop="10dp"
-            android:src="@drawable/person2" />
+            app:civ_border_width="0dp"
+            android:src="@drawable/person2"
+            android:contentDescription="Liked by user image" />
 
         <TextView
             android:id="@+id/likesCount"
@@ -491,7 +299,7 @@
             android:layout_toEndOf="@id/profileImage2"
             android:layout_alignTop="@id/profileImage2"
             android:layout_alignBottom="@id/profileImage2"
-            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:layout_marginStart="10dp"/>
 
         <TextView
@@ -505,7 +313,7 @@
             android:layout_toEndOf="@id/likesCount"
             android:layout_alignTop="@id/profileImage2"
             android:layout_alignBottom="@id/profileImage2"
-            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:layout_marginStart="5dp"/>
 
         <TextView
@@ -518,7 +326,7 @@
             android:layout_toEndOf="@id/count"
             android:layout_alignTop="@id/profileImage2"
             android:layout_alignBottom="@id/profileImage2"
-            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:layout_marginStart="5dp"/>
 
         <TextView
@@ -532,7 +340,7 @@
             android:layout_toEndOf="@id/and"
             android:layout_alignTop="@id/profileImage2"
             android:layout_alignBottom="@id/profileImage2"
-            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:layout_marginStart="5dp"/>
 
         <TextView
@@ -563,11 +371,9 @@
             android:text="share some photos"
             android:textSize="14sp"
             android:textColor="@color/black"/>
-
     </RelativeLayout>
 
 
-<!--    Bottom Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -588,6 +394,7 @@
             android:src="@drawable/img8"
             android:layout_below="@id/line"
             android:tint="@color/Red"
+            android:contentDescription="Home"
             android:layout_marginTop="13dp"
             android:layout_marginStart="25dp"
             android:layout_alignParentStart="true" />
@@ -601,7 +408,8 @@
             android:layout_marginTop="15dp"
             android:layout_toEndOf="@id/homeIcon"
             android:src="@drawable/img9"
-            android:tint="@color/Red" />
+            android:tint="@color/Red"
+            android:contentDescription="Search" />
 
         <ImageView
             android:id="@+id/homeIcon3"
@@ -609,6 +417,7 @@
             android:layout_height="20dp"
             android:src="@drawable/img10"
             android:tint="@color/Red"
+            android:contentDescription="Add Post"
             android:layout_toEndOf="@id/homeIcon2"
             android:layout_below="@id/line"
             android:layout_marginTop="15dp"
@@ -621,6 +430,7 @@
             android:src="@drawable/img5"
             android:layout_toRightOf="@+id/homeIcon3"
             android:tint="@color/Red"
+            android:contentDescription="Activity"
             android:layout_below="@id/line"
             android:layout_marginTop="15dp"
             android:layout_marginStart="65dp"/>
@@ -633,17 +443,18 @@
             android:layout_marginEnd="40dp"
             android:layout_marginTop="15dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/person2" />
+            app:civ_border_width="0dp"
+            android:src="@drawable/person2"
+            android:contentDescription="Profile" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="10dp"
             android:src="@drawable/bar"
+            android:contentDescription="Navigation Bar Indicator"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             />
-
     </RelativeLayout>
-
 </LinearLayout>
