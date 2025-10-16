@@ -3,6 +3,7 @@ package com.example.firstapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,28 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.database.FirebaseDatabase
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class MainActivity16 : AppCompatActivity() {
 
-    // Activity Result Launcher for selecting an image OR video from the gallery
-    private val pickMediaLauncher = registerForActivityResult(
+    private lateinit var database: FirebaseDatabase
+
+    private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
-    ) { uri ->
-        // Note: The intentType flag for POST_UPLOAD is ignored here to keep the story flow simple
-
+    ) { uri: Uri? ->
         if (uri != null) {
-            val mimeType = contentResolver.getType(uri)
-            val isVideo = mimeType?.startsWith("video/") == true
-
-            // Send media to the Story Preview/Encoding screen
-            val intent = Intent(this, MainActivity19::class.java).apply {
-                putExtra("MEDIA_URI", uri.toString())
-                putExtra("IS_VIDEO", isVideo) // Passes the media type
-            }
-            startActivity(intent)
-            finish()
+            uploadImageToFirebase(uri)
         } else {
-            Toast.makeText(this, "Media selection cancelled.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Image selection cancelled.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -39,20 +33,60 @@ class MainActivity16 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main16)
+
+        database = FirebaseDatabase.getInstance()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Assuming this is the main trigger area to open the gallery/media picker
-        var galleryOpener = findViewById<TextView>(R.id.text1)
-
-        galleryOpener.setOnClickListener {
-            pickMediaLauncher.launch("image/*") // Launching with "image/*" for simplicity
+        findViewById<TextView>(R.id.text1).setOnClickListener {
+            startActivity(Intent(this, MainActivity5::class.java))
+            finish()
         }
 
-        // Note: The rest of the navigation logic (like the Cancel/Back button)
-        // is assumed to be handled by other click listeners in your original code.
+        findViewById<TextView>(R.id.text2_2).setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+    }
+
+    private fun uploadImageToFirebase(uri: Uri) {
+        Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show()
+
+        try {
+            val imageBase64 = uriToBase64(uri)
+            val imageRef = database.getReference("images").push()
+
+            // CRITICAL: Use "base64Image" to match the Post data class field
+            val imageData = mapOf(
+                "base64Image" to imageBase64,
+                "timestamp" to System.currentTimeMillis()
+            )
+
+            imageRef.setValue(imageData)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Image uploaded successfully! 🎉", Toast.LENGTH_LONG).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to process image: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun uriToBase64(uri: Uri): String {
+        // This function efficiently reads the file and converts it to a Base64 string.
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        inputStream?.use { input ->
+            input.copyTo(byteArrayOutputStream)
+        }
+        val byteArray = byteArrayOutputStream.toByteArray()
+        // CRITICAL: Use Base64.NO_WRAP to prevent line breaks that corrupt decoding
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
     }
 }

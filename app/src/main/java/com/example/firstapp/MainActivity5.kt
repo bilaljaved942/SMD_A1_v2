@@ -38,6 +38,18 @@ class MainActivity5 : AppCompatActivity() {
             insets
         }
 
+        var homeScreen=findViewById<ImageView>(R.id.profileImage3)
+        homeScreen.setOnClickListener {
+            val intent = Intent(this, MainActivity13::class.java)
+            startActivity(intent)
+        }
+
+        var homeIcone=findViewById<ImageView>(R.id.homeIcon3)
+        homeIcone.setOnClickListener {
+            val intent = Intent(this, MainActivity16::class.java)
+            startActivity(intent)
+        }
+
         // --- STORIES FEATURE INTEGRATION (OPTIMIZED FOR IMMEDIATE DISPLAY) ---
         storiesRecyclerView = findViewById(R.id.stories_recycler_view)
         storiesRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

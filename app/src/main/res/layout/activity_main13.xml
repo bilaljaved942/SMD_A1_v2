@@ -443,119 +443,19 @@
 
     </RelativeLayout>
 
-<!--    scroll view section for posts-->
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/posts_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="2dp">
+            android:layout_height="match_parent"
+            android:padding="2dp" />
 
-            <!-- Row 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
+    </RelativeLayout>
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-            </LinearLayout>
-
-            <!-- Row 2 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-            </LinearLayout>
-
-            <!-- Row 3 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="1"
-                    android:layout_margin="1dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/act12_1" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-
-
-<!--    Bottom section-->
     <RelativeLayout
         android:id="@+id/bottom_section"
         android:layout_width="match_parent"
