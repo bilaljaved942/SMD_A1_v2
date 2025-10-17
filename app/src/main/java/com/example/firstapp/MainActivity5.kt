@@ -38,8 +38,8 @@ class MainActivity5 : AppCompatActivity() {
             insets
         }
 
-        var homeScreen=findViewById<ImageView>(R.id.profileImage3)
-        homeScreen.setOnClickListener {
+        var profileScreen=findViewById<ImageView>(R.id.profileImage3)
+        profileScreen.setOnClickListener {
             val intent = Intent(this, MainActivity13::class.java)
             startActivity(intent)
         }
@@ -47,6 +47,30 @@ class MainActivity5 : AppCompatActivity() {
         var homeIcone=findViewById<ImageView>(R.id.homeIcon3)
         homeIcone.setOnClickListener {
             val intent = Intent(this, MainActivity16::class.java)
+            startActivity(intent)
+        }
+
+        var homeIcone2=findViewById<ImageView>(R.id.homeIcon2)
+        homeIcone2.setOnClickListener {
+            val intent = Intent(this, MainActivity6::class.java)
+            startActivity(intent)
+        }
+
+        var homeIcone3=findViewById<ImageView>(R.id.homeIcon4)
+        homeIcone2.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
+            startActivity(intent)
+        }
+
+        var message=findViewById<ImageView>(R.id.forward)
+        message.setOnClickListener {
+            val intent = Intent(this, MainActivity8::class.java)
+            startActivity(intent)
+        }
+
+        var follower=findViewById<ImageView>(R.id.batteryIcon)
+        follower.setOnClickListener {
+            val intent = Intent(this, MainActivity22::class.java)
             startActivity(intent)
         }
 

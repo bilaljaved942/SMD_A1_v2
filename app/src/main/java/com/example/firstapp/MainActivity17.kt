@@ -78,7 +78,7 @@ class MainActivity17 : AppCompatActivity() {
         // 2. Gallery Button Click Listener (Bottom-left icon)
         // This button launches the gallery selection screen
         findViewById<ImageView>(R.id.image1).setOnClickListener {
-            startActivity(Intent(this, MainActivity16::class.java))
+            startActivity(Intent(this, MainActivity5::class.java))
             finish()
         }
     }

@@ -12,12 +12,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseAuth // <-- NEW IMPORT
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 class MainActivity16 : AppCompatActivity() {
 
     private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth // <-- INITIALIZE FIREBASE AUTH
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -34,7 +36,9 @@ class MainActivity16 : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main16)
 
+        // Initialize Firebase services
         database = FirebaseDatabase.getInstance()
+        auth = FirebaseAuth.getInstance() // <-- INITIALIZED
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,16 +57,24 @@ class MainActivity16 : AppCompatActivity() {
     }
 
     private fun uploadImageToFirebase(uri: Uri) {
+        // Get the current logged-in user's ID
+        val currentUserId = auth.currentUser?.uid
+        if (currentUserId == null) {
+            Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
+            return // Prevent posting if no user is found
+        }
+
         Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show()
 
         try {
             val imageBase64 = uriToBase64(uri)
             val imageRef = database.getReference("images").push()
 
-            // CRITICAL: Use "base64Image" to match the Post data class field
+            // Save post data including the crucial userId
             val imageData = mapOf(
                 "base64Image" to imageBase64,
-                "timestamp" to System.currentTimeMillis()
+                "timestamp" to System.currentTimeMillis(),
+                "userId" to currentUserId // <-- SAVING USER ID
             )
 
             imageRef.setValue(imageData)
@@ -79,14 +91,12 @@ class MainActivity16 : AppCompatActivity() {
     }
 
     private fun uriToBase64(uri: Uri): String {
-        // This function efficiently reads the file and converts it to a Base64 string.
         val inputStream: InputStream? = contentResolver.openInputStream(uri)
         val byteArrayOutputStream = ByteArrayOutputStream()
         inputStream?.use { input ->
             input.copyTo(byteArrayOutputStream)
         }
         val byteArray = byteArrayOutputStream.toByteArray()
-        // CRITICAL: Use Base64.NO_WRAP to prevent line breaks that corrupt decoding
         return Base64.encodeToString(byteArray, Base64.NO_WRAP)
     }
 }

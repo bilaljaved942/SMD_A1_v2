@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="8dp"
+    android:paddingEnd="60dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/text_message_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/gray_rect"
+        android:padding="10dp"
+        android:elevation="1dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:text="This is a received message!"
+        android:maxWidth="280dp" />
+
+    <TextView
+        android:id="@+id/text_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_message_body"
+        android:layout_alignStart="@id/text_message_body"
+        android:layout_marginTop="2dp"
+        android:textSize="12sp"
+        android:textColor="@color/Gray"
+        android:text="4:49 PM"/>
+
+</RelativeLayout>
