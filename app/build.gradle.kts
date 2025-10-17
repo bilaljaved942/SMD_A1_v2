@@ -79,4 +79,7 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Video call implementation dependency
+    implementation("io.agora.rtc:full-sdk:4.6.0")
 }

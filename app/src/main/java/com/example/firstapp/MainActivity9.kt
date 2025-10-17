@@ -107,6 +107,11 @@ class MainActivity9 : AppCompatActivity() {
             pickImageLauncher.launch("image/*")
         }
 
+
+        findViewById<ImageView>(R.id.image2).setOnClickListener {
+            val intent = Intent(this, MainActivity10::class.java)
+            startActivity(intent)
+        }
         // Removed: videoCallButton.setOnClickListener { startVideoCall() }
 
         fetchMessages()
