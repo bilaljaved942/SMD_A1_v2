@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
+// import Story // <-- REMOVED THIS AMBIGUOUS IMPORT
 
-// NOTE: Story data class must be defined in its own file or accessible here.
+// *** FIX: Story data class is now DEFINED HERE for self-containment ***
 data class Story(
     val id: String = "",
     val userId: String = "",
@@ -21,6 +21,7 @@ data class Story(
     val viewed: Boolean = false,
     val isVideo: Boolean = false
 )
+// *** END FIX ***
 
 class StoryAdapter(
     private var stories: MutableList<Story>,
@@ -28,6 +29,9 @@ class StoryAdapter(
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+    // NEW FIELD: To hold the current user's Base64 profile picture
+    private var currentUserProfilePicBase64: String? = null
 
     class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val profileImage: CircleImageView = view.findViewById(R.id.story_profile_image)
@@ -45,7 +49,7 @@ class StoryAdapter(
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = stories[position]
 
-        // Determine if an active story exists for this user
+        // Determine if an active story exists for this user (Story logic)
         val hasActiveStory = story.imageUrl.isNotEmpty() && story.imageUrl.length > 100
 
         // --- LOGIC FOR "YOUR STORY" ---
@@ -53,34 +57,39 @@ class StoryAdapter(
             holder.username.text = "Your Story"
             holder.addIcon.visibility = View.VISIBLE
 
-            if (hasActiveStory) {
-                // SCENARIO 1: STORY IS ACTIVE
-                holder.ringContainer.setBackgroundResource(R.drawable.create_grad)
-
-                // FIX: ALWAYS show the DP in the small circle, even when a story is active.
-                holder.profileImage.setImageResource(R.drawable.person)
+            // >>> PROFILE PICTURE LOGIC <<<
+            if (!currentUserProfilePicBase64.isNullOrBlank()) {
+                try {
+                    val imageBytes = Base64.decode(currentUserProfilePicBase64, Base64.NO_WRAP)
+                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    holder.profileImage.setImageBitmap(bitmap)
+                } catch (e: IllegalArgumentException) {
+                    holder.profileImage.setImageResource(R.drawable.person)
+                }
             } else {
-                // SCENARIO 2: NO STORY UPLOADED YET
-                holder.ringContainer.background = null
                 holder.profileImage.setImageResource(R.drawable.person)
+            }
+            // >>> END PROFILE PICTURE LOGIC <<<
+
+            // Story Ring Logic (Existing)
+            if (hasActiveStory) {
+                holder.ringContainer.setBackgroundResource(R.drawable.create_grad)
+            } else {
+                holder.ringContainer.background = null
             }
 
         } else {
-            // --- LOGIC FOR ALL OTHER USERS' STORIES ---
-
+            // --- LOGIC FOR ALL OTHER USERS' STORIES (Existing) ---
             holder.username.text = story.userId
             holder.addIcon.visibility = View.GONE
 
-            if (hasActiveStory) {
-                // SCENARIO 3: FRIEND'S STORY IS ACTIVE
-                holder.ringContainer.setBackgroundResource(R.drawable.create_grad)
+            // Default image for friends
+            holder.profileImage.setImageResource(R.drawable.person)
 
-                // FIX: ALWAYS show the DP in the small circle for friends as well.
-                holder.profileImage.setImageResource(R.drawable.person)
+            if (hasActiveStory) {
+                holder.ringContainer.setBackgroundResource(R.drawable.create_grad)
             } else {
-                // SCENARIO 4: FRIEND HAS NO ACTIVE STORY
                 holder.ringContainer.background = null
-                holder.profileImage.setImageResource(R.drawable.person)
             }
         }
 
@@ -91,7 +100,16 @@ class StoryAdapter(
 
     override fun getItemCount(): Int = stories.size
 
-    // ... (updateStories function remains the same) ...
+    // NEW FUNCTION: Public method to receive the user's Base64 profile picture
+    fun updateProfilePicture(base64: String?) {
+        currentUserProfilePicBase64 = base64
+        // Only refresh the first item (Your Story)
+        if (stories.isNotEmpty() && stories.first().id == "YOUR_STORY_PLACEHOLDER") {
+            notifyItemChanged(0)
+        }
+    }
+
+    // EXISTING LOGIC: Handles fetching and merging stories
     fun updateStories(newStories: List<Story>) {
         val uniqueStoriesMap = mutableMapOf<String, Story>()
         var userOwnStory: Story? = null
@@ -120,7 +138,6 @@ class StoryAdapter(
         val placeholder = uniqueStoriesMap["YOUR_STORY_PLACEHOLDER"]
         if (placeholder != null) {
             if (userOwnStory != null) {
-                // MERGE: Copy the story data into the placeholder for the conditional check in MA5.kt
                 val mergedStory = placeholder.copy(
                     userId = userOwnStory.userId,
                     imageUrl = userOwnStory.imageUrl

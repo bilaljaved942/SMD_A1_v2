@@ -1,23 +1,31 @@
 package com.example.firstapp
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import Post
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import Post
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.auth.FirebaseAuth
+import de.hdodenhof.circleimageview.CircleImageView // Ensure this import is present
+
+// Assuming you have a Post data class and a PostsAdapter class
+// import Post // Uncomment if Post is in a separate file
+// import PostsAdapter // Uncomment if PostsAdapter is in a separate file
 
 class MainActivity13 : AppCompatActivity() {
 
@@ -27,8 +35,22 @@ class MainActivity13 : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
-    // Reference for the name TextView (using the specified ID: text2_1)
+    // References
     private lateinit var profileNameTextView: TextView
+    // CRITICAL: Profile image ID from your layout is 'profileImage'
+    private lateinit var profileImageView: CircleImageView // Changed to CircleImageView
+
+    // Launcher for handling the result when returning from MainActivity15 (Edit Profile)
+    private val editProfileLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // This launcher handles the result from MainActivity15.
+        // Since fetchUserNameAndPicture uses a real-time listener,
+        // the profile picture will already be updated when this code runs.
+        if (result.resultCode == RESULT_OK) {
+            Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +60,27 @@ class MainActivity13 : AppCompatActivity() {
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        var logout=findViewById<ImageView>(R.id.image3)
-        logout.setOnClickListener {
+        // --- View Initialization ---
+        // ID for the name TextView in activity_main13.xml is 'text2_1'
+        profileNameTextView = findViewById(R.id.text2_1)
+        // ID for the profile image in activity_main13.xml is 'profileImage'
+        profileImageView = findViewById(R.id.profileImage)
+        val editProfileButton = findViewById<TextView>(R.id.text2_5)
+
+        // --- Click Handlers ---
+
+        // 1. Logout
+        findViewById<ImageView>(R.id.image3).setOnClickListener {
+            auth.signOut()
             startActivity(Intent(this, MainActivity3::class.java))
             finish()
         }
 
-        // --- 1. Initialize Name TextView ---
-        profileNameTextView = findViewById(R.id.text2_1)
+        // 2. Navigation to Edit Profile (MainActivity15)
+        editProfileButton.setOnClickListener {
+            val intent = Intent(this, MainActivity15::class.java)
+            editProfileLauncher.launch(intent) // Use launcher to expect a result
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,61 +88,73 @@ class MainActivity13 : AppCompatActivity() {
             insets
         }
 
+        // Setup RecyclerView for Posts
         postsRecyclerView = findViewById(R.id.posts_recycler_view)
         postsRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
         postsAdapter = PostsAdapter(postsList)
         postsRecyclerView.adapter = postsAdapter
 
-        // Start fetching user details (name) and posts
         fetchUserProfileAndPosts()
 
-        // --- Your Existing Navigation Logic ---
         findViewById<ImageView>(R.id.homeIcon).setOnClickListener {
             startActivity(Intent(this, MainActivity5::class.java))
         }
-        // ... (other navigation code)
     }
+
+    // --- Data Fetching Logic ---
 
     private fun fetchUserProfileAndPosts() {
         val currentUserId = auth.currentUser?.uid
 
         if (currentUserId == null) {
-            // Set a default state for non-logged-in users
             profileNameTextView.text = "Guest User"
-            Log.e("MainActivity13", "User not logged in. Cannot fetch profile details.")
+            Log.e("MainActivity13", "User not logged in.")
             postsList.clear()
             postsAdapter.notifyDataSetChanged()
             return
         }
 
-        // Fetch and display name
-        fetchUserName(currentUserId)
-
-        // Fetch and display posts
+        // Fetches Name and Picture
+        fetchUserNameAndPicture(currentUserId)
         fetchUserPosts(currentUserId)
     }
 
     /**
-     * Fetches the user's name from /users/{userId} and updates the TextView (text2_1).
+     * Fetches the user's name and profile picture Base64 string in real-time
+     * and displays it in the CircleImageView (profileImage).
      */
-    private fun fetchUserName(userId: String) {
-        // Look up the profile under the dedicated 'users' node
+    private fun fetchUserNameAndPicture(userId: String) {
         val userRef = database.getReference("users").child(userId)
-        profileNameTextView.text = "Loading..."
 
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        // Use addValueEventListener for real-time updates:
+        // When MainActivity15 updates the 'profilePicture' value,
+        // this listener fires and updates the image instantly.
+        userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Fetch the "name" field saved during registration
+                // Fetch Name (kept for completeness)
                 val name = snapshot.child("name").getValue(String::class.java)
+                profileNameTextView.text = name ?: (auth.currentUser?.email ?: "User Profile")
 
-                if (name != null && name.isNotBlank()) {
-                    profileNameTextView.text = name
+                // Fetch Picture Base64 String
+                val base64Pic = snapshot.child("profilePicture").getValue(String::class.java)
+
+                if (base64Pic != null && base64Pic.isNotBlank()) {
+                    try {
+                        // Decode the Base64 string back into a byte array
+                        val imageBytes = Base64.decode(base64Pic, Base64.NO_WRAP)
+                        // Create a Bitmap from the byte array
+                        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        // Set the Bitmap to the ImageView
+                        profileImageView.setImageBitmap(bitmap)
+                    } catch (e: IllegalArgumentException) {
+                        Log.e("Profile", "Invalid Base64 for profile picture: ${e.message}")
+                        // Fallback to default image
+                        profileImageView.setImageResource(R.drawable.person)
+                    }
                 } else {
-                    // Fallback to email if name is missing
-                    val email = auth.currentUser?.email
-                    profileNameTextView.text = email ?: "User Profile"
-                    Log.w("Profile", "Name field not found, using email as fallback.")
+                    // Default image if no picture is set
+                    profileImageView.setImageResource(R.drawable.person)
                 }
             }
 
@@ -126,6 +173,7 @@ class MainActivity13 : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 postsList.clear()
                 for (postSnapshot in snapshot.children) {
+                    // Make sure your Post data class matches the Firebase structure
                     val post = postSnapshot.getValue(Post::class.java)
                     post?.let {
                         val postId = postSnapshot.key

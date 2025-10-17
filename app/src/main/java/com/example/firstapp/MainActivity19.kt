@@ -18,7 +18,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
-
+// FIX: We rely on the single definition of 'Story' from the project package,
+// eliminating the redeclaration error.
 
 class MainActivity19 : AppCompatActivity() {
 
@@ -29,7 +30,11 @@ class MainActivity19 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main19)
-        // ... (Window insets setup) ...
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         val previewImageView = findViewById<ImageView>(R.id.preview_image_view)
 
@@ -64,7 +69,7 @@ class MainActivity19 : AppCompatActivity() {
                 }
             }
         }
-        // ... (Existing navigation) ...
+        // ... (Existing navigation/cleanup) ...
     }
 
     private fun encodeMediaToBase64(uri: Uri, isVideo: Boolean): String? {
@@ -74,6 +79,7 @@ class MainActivity19 : AppCompatActivity() {
             try {
                 contentResolver.openInputStream(uri)?.use { inputStream ->
                     val byteArray = inputStream.readBytes()
+                    // CRITICAL: Ensure NO_WRAP is used consistently, although DEFAULT is often fine here.
                     return Base64.encodeToString(byteArray, Base64.NO_WRAP)
                 }
             } catch (e: Exception) { return null }
@@ -98,12 +104,13 @@ class MainActivity19 : AppCompatActivity() {
         val databaseRef = FirebaseDatabase.getInstance().getReference("stories")
         val storyId = databaseRef.push().key ?: return
 
+        // This line now correctly uses the Story class defined elsewhere in the package.
         val story = Story(
             id = storyId,
             userId = userId,
             imageUrl = base64String,
             timestamp = System.currentTimeMillis(),
-            isVideo = isVideo // CRITICAL FIX APPLIED
+            isVideo = isVideo
         )
 
         databaseRef.child(storyId).setValue(story)

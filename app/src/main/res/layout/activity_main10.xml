@@ -9,11 +9,6 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@android:color/transparent" android:elevation="2dp">
         <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="3" android:gravity="center_vertical" android:paddingStart="20dp"/>
         <!--  Picture and name section  -->
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="3">
-            <de.hdodenhof.circleimageview.CircleImageView android:id="@+id/squareRoundedImage" android:layout_width="145dp" android:layout_height="140dp" android:layout_centerHorizontal="true" android:layout_gravity="center" android:src="@drawable/person2" android:padding="4dp" android:background="@android:color/transparent"/>
-            <TextView android:id="@+id/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="25dp" android:text="Mother ❤️" android:layout_marginTop="10dp" android:layout_centerHorizontal="true" android:layout_below="@+id/squareRoundedImage" android:textColor="@color/white" android:textStyle="bold"/>
-            <TextView android:id="@+id/text2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="25dp" android:text="03:12" android:layout_marginTop="15dp" android:layout_centerHorizontal="true" android:layout_below="@+id/text1" android:textColor="@color/white"/>
-        </RelativeLayout>
         <!--  Bottom section  -->
         <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginBottom="30dp" android:layout_weight="3" android:paddingStart="20dp">
             <ImageView android:id="@+id/volumeImage" android:layout_width="55dp" android:layout_height="40dp" android:src="@drawable/img23" android:layout_marginBottom="20dp" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:layout_marginEnd="60dp" android:scaleType="centerCrop" android:tint="@color/white" android:padding="4dp"/>
