@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chat_user_profile_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/person2"
+        android:padding="4dp" />
+
+    <TextView
+        android:id="@+id/chat_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="joshua_I"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="13dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_toEndOf="@+id/chat_user_profile_image"/>
+
+    <TextView
+        android:id="@+id/chat_last_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Have a nice day, bro!"
+        android:layout_marginStart="13dp"
+        android:textSize="14sp"
+        android:layout_toEndOf="@+id/chat_user_profile_image"
+        android:layout_below="@+id/chat_user_name"/>
+
+    <ImageView
+        android:id="@+id/chat_camera_icon"
+        android:layout_width="30dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:tint="@color/Red"
+        android:src="@drawable/camera" />
+
+</RelativeLayout>
