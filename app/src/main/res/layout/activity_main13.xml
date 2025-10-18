@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -473,63 +474,70 @@
 
         <ImageView
             android:id="@+id/homeIcon"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/img14"
             android:layout_below="@id/line"
             android:tint="@color/Red"
-            android:layout_marginTop="14dp"
+            android:contentDescription="Home"
+            android:layout_marginTop="13dp"
             android:layout_marginStart="25dp"
             android:layout_alignParentStart="true" />
 
         <ImageView
             android:id="@+id/homeIcon2"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_below="@id/line"
             android:layout_marginStart="49dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="15dp"
             android:layout_toEndOf="@id/homeIcon"
             android:src="@drawable/img9"
-            android:tint="@color/Red" />
+            android:tint="@color/Red"
+            android:contentDescription="Search" />
 
         <ImageView
             android:id="@+id/homeIcon3"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/img10"
             android:tint="@color/Red"
+            android:contentDescription="Add Post"
             android:layout_toEndOf="@id/homeIcon2"
             android:layout_below="@id/line"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="47dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="55dp"/>
 
         <ImageView
             android:id="@+id/homeIcon4"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:src="@drawable/img5"
-            android:layout_toLeftOf="@+id/profileImage3"
+            android:layout_toRightOf="@+id/homeIcon3"
             android:tint="@color/Red"
+            android:contentDescription="Activity"
             android:layout_below="@id/line"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="46dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="60dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage3"
-            android:layout_width="35dp"
-            android:layout_height="40dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_below="@id/line"
             android:layout_marginEnd="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/person2" />
+            app:civ_border_width="0dp"
+            android:src="@drawable/person2"
+            android:contentDescription="Profile" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="10dp"
             android:src="@drawable/bar"
+            android:contentDescription="Navigation Bar Indicator"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             />

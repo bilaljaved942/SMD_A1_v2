@@ -15,10 +15,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import User // Ensure this import is correct
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+import User
+// User and UserAdapter assumed to be accessible in this package
 
-class MainActivity22 : AppCompatActivity() { // <-- CORRECTED CLASS NAME
+class MainActivity22 : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -29,24 +31,21 @@ class MainActivity22 : AppCompatActivity() { // <-- CORRECTED CLASS NAME
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main22) // Loads the correct layout file
+        setContentView(R.layout.activity_main22)
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // Assuming R.id.main_find_people is the root view ID for proper insets handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_find_people)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // --- Navigation Handler ---
         findViewById<ImageView>(R.id.back_arrow)?.setOnClickListener {
             finish()
         }
 
-        // --- Setup RecyclerView ---
         usersRecyclerView = findViewById(R.id.users_recycler_view)
         usersRecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -63,6 +62,7 @@ class MainActivity22 : AppCompatActivity() { // <-- CORRECTED CLASS NAME
     private fun fetchUsers() {
         val usersRef = database.getReference("users")
         val currentUserId = auth.currentUser?.uid
+
         if (currentUserId == null) {
             Toast.makeText(this, "Authentication error. Please log in.", Toast.LENGTH_LONG).show()
             return
@@ -71,21 +71,34 @@ class MainActivity22 : AppCompatActivity() { // <-- CORRECTED CLASS NAME
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userList.clear()
+                val processedUids = HashSet<String>()
 
                 for (userSnapshot in snapshot.children) {
                     val uid = userSnapshot.key
 
-                    // Filter out the current user and ensure UID exists
-                    if (uid != null && uid != currentUserId) {
-                        // Use "New User" as a fallback name if registration failed to save it
-                        val name = userSnapshot.child("name").getValue(String::class.java) ?: "New User"
-                        val email = userSnapshot.child("email").getValue(String::class.java) ?: ""
+                    if (uid != null && uid != currentUserId && !processedUids.contains(uid)) {
+                        val name = userSnapshot.child("name").getValue(String::class.java)
 
-                        userList.add(User(uid = uid, name = name, email = email, isFollowing = false))
+                        if (name != null && name.isNotBlank()) {
+                            val email = userSnapshot.child("email").getValue(String::class.java) ?: ""
+
+                            // CRITICAL: Fetch the profile picture Base64 string
+                            val profilePic = userSnapshot.child("profilePicture").getValue(String::class.java)
+
+                            userList.add(User(
+                                uid = uid,
+                                name = name,
+                                email = email,
+                                profilePictureBase64 = profilePic, // <-- ADDED
+                                isFollowing = false
+                            ))
+                            processedUids.add(uid)
+                        } else {
+                            Log.w("FindPeople", "Skipped user with UID $uid due to missing name.")
+                        }
                     }
                 }
 
-                // Now that we have the list, check the following status
                 fetchFollowingStatus(currentUserId)
             }
 

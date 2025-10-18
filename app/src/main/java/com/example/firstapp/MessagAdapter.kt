@@ -14,8 +14,22 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import Message
-// import Message // Ensure Message.kt is importable
+
+// *** DATA CLASS DEFINITION (Ensuring one definition for the project) ***
+data class Message(
+    val id: String = "",
+    val senderId: String = "",
+    val receiverId: String = "",
+    val content: String = "",
+    val timestamp: Long = 0L,
+    val mediaBase64: String? = null,
+    val type: String = "text", // Can be "text", "image", or "call_invite"
+    val isEdited: Boolean = false,
+    val callType: String? = null, // "video" or "audio"
+    val channelName: String? = null // Agora Channel ID
+)
+// *** END DEFINITION ***
+
 
 class MessageAdapter(
     private val messageList: List<Message>,
@@ -39,7 +53,6 @@ class MessageAdapter(
     class TextViewHolder(view: View) : MessageViewHolder(view) {
         val messageBody: TextView = view.findViewById(R.id.text_message_body)
         val messageTime: TextView? = view.findViewById(R.id.text_message_time)
-        // Note: Assuming R.id.text_edit_indicator exists in your message layouts
         val editIndicator: TextView? = view.findViewById(R.id.text_edit_indicator)
     }
 
@@ -64,7 +77,6 @@ class MessageAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            // NOTE: R.layout.item_message_received and R.layout.item_message_image_received must exist
             VIEW_TYPE_SENT_TEXT -> TextViewHolder(inflater.inflate(R.layout.item_message_sent, parent, false))
             VIEW_TYPE_RECEIVED_TEXT -> TextViewHolder(inflater.inflate(R.layout.item_message_received, parent, false))
             VIEW_TYPE_SENT_IMAGE -> ImageViewHolder(inflater.inflate(R.layout.item_message_image, parent, false))
@@ -79,12 +91,9 @@ class MessageAdapter(
         val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(message.timestamp))
         val isSender = message.senderId == currentUserId
 
-        // Check if the message is within the 5-minute edit window
         val isWithinEditWindow = System.currentTimeMillis() - message.timestamp < EDIT_WINDOW_MILLIS
 
         // --- 1. SET LISTENERS AND TIME ---
-
-        // Reset listeners
         holder.itemView.setOnClickListener(null)
         holder.itemView.setOnLongClickListener(null)
 
@@ -92,14 +101,10 @@ class MessageAdapter(
             is TextViewHolder -> {
                 holder.messageTime?.text = formattedTime
                 holder.messageBody.text = message.content
-
-                // Show 'Edited' status
                 holder.editIndicator?.visibility = if (message.isEdited) View.VISIBLE else View.GONE
 
                 if (isSender && isWithinEditWindow) {
-                    // Single click = Delete (text or image)
                     holder.itemView.setOnClickListener { onClickForDelete(message) }
-                    // Long click = Edit (text only)
                     holder.itemView.setOnLongClickListener {
                         onLongClickForEdit(message)
                         true
@@ -108,14 +113,10 @@ class MessageAdapter(
             }
             is ImageViewHolder -> {
                 holder.messageTime?.text = formattedTime
-
-                // Show 'Edited' status
                 holder.editIndicator?.visibility = if (message.isEdited) View.VISIBLE else View.GONE
 
                 if (isSender && isWithinEditWindow) {
-                    // Single click = Delete (text or image)
                     holder.itemView.setOnClickListener { onClickForDelete(message) }
-                    // Long click = Disabled for images in this implementation
                 }
 
                 // --- 2. IMAGE DECODING ---

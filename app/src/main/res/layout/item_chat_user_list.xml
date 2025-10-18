@@ -1,41 +1,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingStart="10dp"
-    android:paddingEnd="16dp">
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="16dp">
 
+    <!-- Profile Image (CircleImageView) -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/chat_user_profile_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="center"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/person2"
-        android:padding="4dp" />
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/LightGray"
+        android:contentDescription="User Profile Picture" />
 
-    <TextView
-        android:id="@+id/chat_user_name"
+    <!-- Name and Last Message Container (Centered) -->
+    <LinearLayout
+        android:id="@+id/text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="joshua_I"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="13dp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_toEndOf="@+id/chat_user_profile_image"/>
-
-    <TextView
-        android:id="@+id/chat_last_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Have a nice day, bro!"
-        android:layout_marginStart="13dp"
-        android:textSize="14sp"
+        android:orientation="vertical"
         android:layout_toEndOf="@+id/chat_user_profile_image"
-        android:layout_below="@+id/chat_user_name"/>
+        android:layout_toStartOf="@+id/chat_camera_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="16dp">
 
+        <TextView
+            android:id="@+id/chat_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="joshua_I"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/chat_last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Have a nice day, bro!"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <!-- Camera Icon -->
     <ImageView
         android:id="@+id/chat_camera_icon"
         android:layout_width="30dp"
