@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -26,6 +25,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirstApp">
+
+        <!--
+        *** CRITICAL FIX: COMMENTS ACTIVITY DECLARATION ***
+        This must be present for the system to be able to launch the screen.
+        -->
+        <activity
+            android:name=".CommentsActivity"
+            android:label="Comments"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.FirstApp"
+            android:exported="false"/>
+
         <activity
             android:name=".MainActivity23"
             android:exported="false" />

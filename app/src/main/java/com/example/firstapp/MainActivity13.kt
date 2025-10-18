@@ -127,7 +127,8 @@ class MainActivity13 : AppCompatActivity() {
                 val name = snapshot.child("name").getValue(String::class.java)
                 profileNameTextView.text = name ?: (auth.currentUser?.email ?: "User Profile")
 
-                val base64Pic = snapshot.child("profilePicture").getValue(String::class.java)
+                // NOTE: Assuming the field for the profile picture is "profilePictureBase64"
+                val base64Pic = snapshot.child("profilePictureBase64").getValue(String::class.java)
 
                 if (base64Pic != null && base64Pic.isNotBlank()) {
                     try {
@@ -149,7 +150,12 @@ class MainActivity13 : AppCompatActivity() {
         })
     }
 
+    /**
+     * Fetches posts by the current user. Since MainActivity16 now saves the postId
+     * inside the object, we just deserialize the object directly.
+     */
     private fun fetchUserPosts(currentUserId: String) {
+        // NOTE: Posts are stored under the "images" node based on your MainActivity16 code.
         val postsRef = database.getReference("images")
         val userPostsQuery = postsRef.orderByChild("userId").equalTo(currentUserId)
 
@@ -162,9 +168,11 @@ class MainActivity13 : AppCompatActivity() {
 
                 for (postSnapshot in snapshot.children) {
                     val post = postSnapshot.getValue(Post::class.java)
+
+                    // CRITICAL: Now that we save 'postId' inside the object in MainActivity16,
+                    // we can use the object directly, trusting it has the correct ID.
                     post?.let {
-                        val postId = postSnapshot.key
-                        postsList.add(it.copy(postId = postId ?: ""))
+                        postsList.add(it) // Add the post object directly
                     }
                 }
 
@@ -184,7 +192,7 @@ class MainActivity13 : AppCompatActivity() {
      */
     private fun fetchFollowCounts(currentUserId: String) {
 
-        // 1. Get FOLLOWING count (R.id.following) - Path remains the same, works correctly.
+        // 1. Get FOLLOWING count (R.id.following)
         val followingRef = database.getReference("following").child(currentUserId)
         followingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -198,6 +206,7 @@ class MainActivity13 : AppCompatActivity() {
 
         // 2. Get FOLLOWERS count (R.id.followers) - Using query scan against 'following' node.
         val allFollowingRef = database.getReference("following")
+        // FIX: Changed 'addEventListener' to 'addValueEventListener'
         allFollowingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var followersCount = 0

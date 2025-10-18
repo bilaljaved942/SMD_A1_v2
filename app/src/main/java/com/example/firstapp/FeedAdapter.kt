@@ -1,5 +1,6 @@
 package com.example.firstapp
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
@@ -16,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 import Post
+// NOTE: Assuming Post and User data classes are defined elsewhere
+// NOTE: Assuming CommentsActivity is implemented as planned
 
 class FeedAdapter(private val postsList: List<Post>) :
     RecyclerView.Adapter<FeedAdapter.PostViewHolder>() {
@@ -34,13 +37,18 @@ class FeedAdapter(private val postsList: List<Post>) :
         val postImageView: ImageView = itemView.findViewById(R.id.post_image_view)
         val captionTextView: TextView = itemView.findViewById(R.id.caption_full_text)
 
-        // Like/Comment/Count Views (NEWLY INTRODUCED/USED)
-        val likeButton: ImageView = itemView.findViewById(R.id.like_button) // From item_feed_post.xml
-        val likesCountTextView: TextView = itemView.findViewById(R.id.likes_display_text) // This will now show the count
+        // Like/Comment/Count Views
+        val likeButton: ImageView = itemView.findViewById(R.id.like_button)
+        val likesCountTextView: TextView = itemView.findViewById(R.id.likes_display_text)
+
+        // NEW: Comment Button and Count Views (Assuming IDs based on standard naming)
+        val commentButton: ImageView = itemView.findViewById(R.id.comment_button)
+        val commentCountTextView: TextView = itemView.findViewById(R.id.comments_display_text)
+
 
         fun bind(post: Post) {
 
-            // --- 1. Display Post Image and Caption (Unchanged) ---
+            // --- 1. Display Post Image and Caption ---
             if (post.base64Image.isNotBlank()) {
                 try {
                     val imageBytes = Base64.decode(post.base64Image, Base64.NO_WRAP)
@@ -55,22 +63,29 @@ class FeedAdapter(private val postsList: List<Post>) :
             }
             captionTextView.text = "${post.caption}"
 
-            // --- 2. Fetch Post Header Details (Unchanged) ---
+            // --- 2. Fetch Post Header Details ---
             fetchUserDetails(post.userId)
 
-            // --- 3. LIKE FEATURE INTEGRATION (NEW) ---
+            // --- 3. LIKE FEATURE INTEGRATION ---
             if (currentUserId != null) {
-                // Attach real-time listener for likes count and user's like status
                 listenForLikes(post.postId)
-
-                // Attach click listener for toggling the like status
                 likeButton.setOnClickListener {
                     toggleLike(post.postId, currentUserId)
                 }
             } else {
-                // If user is not logged in, disable liking
                 likesCountTextView.text = "0 likes (Login to like)"
                 likeButton.setOnClickListener(null)
+            }
+
+            // --- 4. COMMENTS FEATURE INTEGRATION (NEW) ---
+            listenForCommentCount(post.postId)
+
+            commentButton.setOnClickListener {
+                // Launch the CommentsActivity, passing the postId
+                val intent = Intent(itemView.context, CommentsActivity::class.java).apply {
+                    putExtra("POST_ID", post.postId)
+                }
+                itemView.context.startActivity(intent)
             }
         }
 
@@ -92,13 +107,12 @@ class FeedAdapter(private val postsList: List<Post>) :
 
                     // Update the heart icon color
                     if (isLiked) {
-                        // Set to red/filled icon (Assuming img5 is the heart icon)
+                        // Set to red/filled icon
                         likeButton.setImageResource(R.drawable.img5)
                         likeButton.setColorFilter(itemView.context.resources.getColor(R.color.Red))
                     } else {
                         // Set to gray/unfilled icon
                         likeButton.setImageResource(R.drawable.img5)
-                        // NOTE: Ensure R.color.LightGray is defined and accessible
                         likeButton.setColorFilter(itemView.context.resources.getColor(R.color.LightGray))
                     }
                 }
@@ -134,6 +148,32 @@ class FeedAdapter(private val postsList: List<Post>) :
             })
         }
 
+        /**
+         * Attaches a ValueEventListener to the specific post's comments node to display count.
+         */
+        private fun listenForCommentCount(postId: String) {
+            val commentsRef = FirebaseDatabase.getInstance().getReference("comments").child(postId)
+
+            commentsRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val commentCount = snapshot.childrenCount
+                    // Display count in a friendly way (like Instagram's 'View all X comments')
+                    if (commentCount > 0) {
+                        commentCountTextView.visibility = View.VISIBLE
+                        commentCountTextView.text = "View all $commentCount comments"
+                    } else {
+                        commentCountTextView.visibility = View.GONE
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FeedAdapter", "Failed to read comments count: ${error.message}")
+                    commentCountTextView.text = "View comments"
+                }
+            })
+        }
+
         // --- fetchUserDetails ---
         private fun fetchUserDetails(userId: String) {
             postUsername.text = "Loading..."
@@ -156,12 +196,8 @@ class FeedAdapter(private val postsList: List<Post>) :
 
                     val base64Pic = user.profilePictureBase64// Use the correct field name (profilePicture)
 
-                    // FIX: Use 'let' block to guarantee base64Pic is non-null and non-empty
                     if (!base64Pic.isNullOrBlank()) {
                         try {
-                            // Using the non-null asserted call (!!) here is necessary
-                            // because Base64.decode is a Java method expecting a non-null argument.
-                            // We have already checked for null/blank in the 'if' condition.
                             val imageBytes = Base64.decode(base64Pic!!, Base64.NO_WRAP)
                             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                             postProfileImage.setImageBitmap(bitmap)

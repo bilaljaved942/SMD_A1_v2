@@ -12,14 +12,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.auth.FirebaseAuth // <-- NEW IMPORT
+import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import android.util.Log // Added for logging
 
 class MainActivity16 : AppCompatActivity() {
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth // <-- INITIALIZE FIREBASE AUTH
+    private lateinit var auth: FirebaseAuth
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -38,7 +39,7 @@ class MainActivity16 : AppCompatActivity() {
 
         // Initialize Firebase services
         database = FirebaseDatabase.getInstance()
-        auth = FirebaseAuth.getInstance() // <-- INITIALIZED
+        auth = FirebaseAuth.getInstance()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -57,29 +58,38 @@ class MainActivity16 : AppCompatActivity() {
     }
 
     private fun uploadImageToFirebase(uri: Uri) {
-        // Get the current logged-in user's ID
         val currentUserId = auth.currentUser?.uid
         if (currentUserId == null) {
             Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
-            return // Prevent posting if no user is found
+            return
         }
 
         Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show()
 
         try {
             val imageBase64 = uriToBase64(uri)
-            val imageRef = database.getReference("images").push()
 
-            // Save post data including the crucial userId
+            // --- FIX 1: Generate the unique key FIRST ---
+            val imageRef = database.getReference("images").push()
+            val postKey = imageRef.key
+
+            if (postKey.isNullOrBlank()) {
+                Toast.makeText(this, "Upload failed: Could not generate key.", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            // --- FIX 2: Include the unique postKey in the data map ---
             val imageData = mapOf(
+                "postId" to postKey, // <-- CRITICAL: Now the post object contains its unique ID
                 "base64Image" to imageBase64,
                 "timestamp" to System.currentTimeMillis(),
-                "userId" to currentUserId // <-- SAVING USER ID
+                "userId" to currentUserId
             )
 
             imageRef.setValue(imageData)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Image uploaded successfully! 🎉", Toast.LENGTH_LONG).show()
+                    Log.d("Upload", "Post uploaded with unique ID: $postKey")
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()

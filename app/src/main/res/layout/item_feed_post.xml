@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -48,8 +49,7 @@
     <!-- POST IMAGE -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"> <!-- Fixed height for better feed scrolling -->
-
+        android:layout_height="350dp">
         <ImageView
             android:id="@+id/post_image_view"
             android:layout_width="match_parent"
@@ -68,6 +68,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
+        <!-- Icons (Like, Comment, Share, Save) -->
         <ImageView
             android:id="@+id/like_button"
             android:layout_width="23dp"
@@ -79,8 +80,8 @@
 
         <ImageView
             android:id="@+id/comment_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:tint="@color/Red"
             android:src="@drawable/img6"
             android:contentDescription="Comment Button"
@@ -116,7 +117,7 @@
             android:textSize="14sp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:text="0 likes"/> <!-- Placeholder for dynamic likes count -->
+            android:text="0 likes"/>
 
         <!-- Caption -->
         <TextView
@@ -129,12 +130,27 @@
             android:textSize="14sp"
             android:textColor="@color/black"/>
 
+        <!-- NEWLY ADDED: Comment Count Display Text -->
+        <TextView
+            android:id="@+id/comments_display_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/caption_full_text"
+            android:layout_marginTop="5dp"
+            android:text="View all 0 comments"
+            android:textSize="14sp"
+            android:textColor="@color/LightGray"
+            android:visibility="gone"
+            tools:visibility="visible" />
+        <!-- NOTE: visibility="gone" initially, the adapter will set it to visible if count > 0 -->
+
+
         <!-- Add vertical margin to separate posts -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/LightGray"
-            android:layout_below="@id/caption_full_text"
+            android:layout_below="@id/comments_display_text"
             android:layout_marginTop="10dp" />
 
     </RelativeLayout>
