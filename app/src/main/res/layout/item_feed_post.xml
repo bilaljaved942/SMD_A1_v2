@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:background="@color/white">
+
+    <!-- POST HEADER -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/post_profile_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/person5"
+            android:contentDescription="Post User Profile Image" />
+
+        <TextView
+            android:id="@+id/post_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="joshua_I"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/post_profile_image"
+            android:layout_marginStart="10dp"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/menu"
+            android:tint="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="More Options" />
+
+    </RelativeLayout>
+
+    <!-- POST IMAGE -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="350dp"> <!-- Fixed height for better feed scrolling -->
+
+        <ImageView
+            android:id="@+id/post_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/japan"
+            android:contentDescription="User Post"
+            android:scaleType="centerCrop"/>
+    </RelativeLayout>
+
+    <!-- POST ACTIONS AND DETAILS -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/like_button"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/img5"
+            android:tint="@color/Red"
+            android:contentDescription="Like Button"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/comment_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:tint="@color/Red"
+            android:src="@drawable/img6"
+            android:contentDescription="Comment Button"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/like_button" />
+
+        <ImageView
+            android:id="@+id/share_button"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/img1"
+            android:tint="@color/Red"
+            android:contentDescription="Share Button"
+            android:layout_toEndOf="@id/comment_button" />
+
+        <ImageView
+            android:id="@+id/save_button"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:src="@drawable/img7"
+            android:tint="@color/Red"
+            android:contentDescription="Save Button"
+            android:layout_alignParentEnd="true" />
+
+        <!-- Likes Count/Display -->
+        <TextView
+            android:id="@+id/likes_display_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/like_button"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="0 likes"/> <!-- Placeholder for dynamic likes count -->
+
+        <!-- Caption -->
+        <TextView
+            android:id="@+id/caption_full_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/likes_display_text"
+            android:layout_marginTop="5dp"
+            android:text="joshua_I The game in Japan was amazing and I want to share some photos..."
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+        <!-- Add vertical margin to separate posts -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/LightGray"
+            android:layout_below="@id/caption_full_text"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+</LinearLayout>

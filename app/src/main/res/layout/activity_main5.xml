@@ -213,6 +213,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/img6"
+            android:tint="@color/Red"
             android:contentDescription="Comment Button"
             android:layout_marginStart="7dp"
             android:layout_marginTop="10dp"
