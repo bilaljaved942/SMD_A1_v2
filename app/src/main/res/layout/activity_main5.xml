@@ -153,17 +153,6 @@
             android:src="@drawable/person5"
             android:contentDescription="Post User Profile Image" />
 
-        <ImageView
-            android:id="@+id/postMenuIcon"
-            android:layout_width="15dp"
-            android:layout_height="22dp"
-            android:src="@drawable/img4"
-            android:tint="@color/Gray"
-            android:contentDescription="More Options"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="15dp"
-            android:layout_alignParentEnd="true" />
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -181,25 +170,6 @@
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"/>
 
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tokyo, Japan"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:textStyle="normal"
-                android:layout_below="@id/username"
-                android:layout_marginStart="10dp"/>
-
-            <ImageView
-                android:id="@+id/verified"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/img3"
-                android:tint="@color/Red"
-                android:contentDescription="Verified Icon"
-                android:layout_toEndOf="@id/username"/>
 
         </RelativeLayout>
 

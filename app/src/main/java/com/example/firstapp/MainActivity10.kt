@@ -22,7 +22,7 @@ import io.agora.rtc2.video.VideoCanvas
 class MainActivity10 : AppCompatActivity() {
 
     private val appId = "d08089443f014cacb9579456912cdb6e"
-    private val token = "007eJxTYGArvd4ZZ3j+3drzd1fMj1sSx7/yWZQ5X9yOXU3eHxxn2l1XYEgxsDCwsDQxMU4zMDRJTkxOsjQ1tzQxNbM0NEpOSTJL1f32MaMhkJFh6usQRkYGCATxBRiSMxJL4sszSzLic/NLMlKLGBgAcmomPA=="
+    private val token = "007eJxTYLjN2zexRunx5fLbDovf7N710tT8+oHzPwLfmoR3PE7fpvNFgSHFwMLAwtLExDjNwNAkOTE5ydLU3NLE1MzS0Cg5JcksNbD6c0ZDICODoK8fEyMDBIL4AgzJGYkl8eWZJRnxufklGalFDAwABD0m9Q="
     private val channelName = "chat_with_mother"
 
 

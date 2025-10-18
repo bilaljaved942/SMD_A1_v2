@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/Red" android:id="@+id/main">
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="3" android:gravity="center_vertical" android:paddingStart="20dp"> </RelativeLayout>
+    <!--     Picture and name section -->
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="3">
+        <de.hdodenhof.circleimageview.CircleImageView android:id="@+id/squareRoundedImage" android:layout_width="145dp" android:layout_height="140dp" android:layout_centerHorizontal="true" android:layout_gravity="center" android:src="@drawable/img12" android:padding="4dp"/>
+        <TextView android:id="@+id/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="25dp" android:text="Ringing.." android:layout_marginTop="10dp" android:layout_centerHorizontal="true" android:layout_below="@+id/squareRoundedImage" android:textColor="@color/white" android:textStyle="bold"/>
+
+    </RelativeLayout>
+    <!--     Bottom section -->
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginBottom="30dp" android:layout_weight="3" android:paddingStart="20dp">
+        <ImageView android:id="@+id/volumeImage" android:layout_width="55dp" android:layout_height="40dp" android:src="@drawable/img23" android:layout_marginBottom="20dp" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:layout_marginEnd="60dp" android:scaleType="centerCrop" android:tint="@color/white" android:padding="4dp"/>
+        <ImageView android:id="@+id/callEnd" android:layout_width="90dp" android:layout_height="95dp" android:src="@drawable/img25" android:layout_centerHorizontal="true" android:layout_alignParentBottom="true" android:scaleType="centerCrop" android:padding="4dp"/>
+        <ImageView android:id="@+id/message" android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/img19" android:layout_alignParentStart="true" android:layout_alignParentBottom="true" android:scaleType="centerCrop" android:layout_marginStart="50dp" android:layout_marginBottom="20dp" android:tint="@color/white" android:padding="4dp"/>
+    </RelativeLayout>
+</LinearLayout>

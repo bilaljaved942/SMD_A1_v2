@@ -130,7 +130,7 @@ class MainActivity9 : AppCompatActivity() {
 
 
         findViewById<ImageView>(R.id.image2).setOnClickListener {
-            val intent = Intent(this, MainActivity10::class.java)
+            val intent = Intent(this, MainActivity23::class.java)
             startActivity(intent)
         }
 
