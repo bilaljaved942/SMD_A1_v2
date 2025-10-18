@@ -33,8 +33,6 @@ class CommentsActivity : AppCompatActivity() {
         // --- CRITICAL CHECK: Retrieve the unique POST_ID ---
         postId = intent.getStringExtra("POST_ID") ?: run {
             // Log the error and notify the user if the POST_ID is missing
-            Log.e("CommentsActivity", "FATAL: Post ID is missing from Intent extras.")
-            Toast.makeText(this, "Error: Cannot load comments (Missing Post ID).", Toast.LENGTH_LONG).show()
             finish() // Close the activity since we can't load comments
             return
         }
@@ -83,7 +81,6 @@ class CommentsActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("CommentsActivity", "Failed to load comments: ${error.message}")
-                Toast.makeText(this@CommentsActivity, "Failed to load comments: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

@@ -33,11 +33,14 @@ class MainActivity13 : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
-    // References for User Info
+    // References for User Info (profileImage is the main profile picture)
     private lateinit var profileNameTextView: TextView
     private lateinit var profileImageView: CircleImageView
 
-    // References for the Count TextViews using the unique IDs: R.id.posts, R.id.followers, R.id.following
+    // NEW REFERENCE: For the profile photo in the navbar/header
+    private lateinit var profileImage3: CircleImageView
+
+    // References for the Count TextViews
     private lateinit var postsCountTextView: TextView
     private lateinit var followersCountTextView: TextView
     private lateinit var followingCountTextView: TextView
@@ -61,6 +64,10 @@ class MainActivity13 : AppCompatActivity() {
         // --- View Initialization ---
         profileNameTextView = findViewById(R.id.text2_1)
         profileImageView = findViewById(R.id.profileImage)
+
+        // **CRITICAL ADDITION:** Initialize the navbar profile image view
+        profileImage3 = findViewById(R.id.profileImage3)
+
         val editProfileButton = findViewById<TextView>(R.id.text2_5)
 
         // Initialize the Count TextViews with the correct, unique IDs
@@ -119,6 +126,9 @@ class MainActivity13 : AppCompatActivity() {
         fetchFollowCounts(currentUserId)
     }
 
+    /**
+     * Fetches user name and profile picture and applies the image to both profileImage and profileImage3.
+     */
     private fun fetchUserNameAndPicture(userId: String) {
         val userRef = database.getReference("users").child(userId)
 
@@ -127,20 +137,29 @@ class MainActivity13 : AppCompatActivity() {
                 val name = snapshot.child("name").getValue(String::class.java)
                 profileNameTextView.text = name ?: (auth.currentUser?.email ?: "User Profile")
 
-                // NOTE: Assuming the field for the profile picture is "profilePictureBase64"
-                val base64Pic = snapshot.child("profilePictureBase64").getValue(String::class.java)
+                // **FIX:** Using the correct Firebase key based on MainActivity5: "profilePicture"
+                val base64Pic = snapshot.child("profilePicture").getValue(String::class.java)
 
                 if (base64Pic != null && base64Pic.isNotBlank()) {
                     try {
                         val imageBytes = Base64.decode(base64Pic, Base64.NO_WRAP)
                         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                        // Apply bitmap to BOTH profile views
                         profileImageView.setImageBitmap(bitmap)
+                        profileImage3.setImageBitmap(bitmap)
+
                     } catch (e: IllegalArgumentException) {
                         Log.e("Profile", "Invalid Base64 for profile picture: ${e.message}")
+
+                        // Apply default image to BOTH profile views on error
                         profileImageView.setImageResource(R.drawable.person)
+                        profileImage3.setImageResource(R.drawable.person)
                     }
                 } else {
+                    // Apply default image to BOTH profile views if no picture is set
                     profileImageView.setImageResource(R.drawable.person)
+                    profileImage3.setImageResource(R.drawable.person)
                 }
             }
 
@@ -151,11 +170,9 @@ class MainActivity13 : AppCompatActivity() {
     }
 
     /**
-     * Fetches posts by the current user. Since MainActivity16 now saves the postId
-     * inside the object, we just deserialize the object directly.
+     * Fetches posts by the current user.
      */
     private fun fetchUserPosts(currentUserId: String) {
-        // NOTE: Posts are stored under the "images" node based on your MainActivity16 code.
         val postsRef = database.getReference("images")
         val userPostsQuery = postsRef.orderByChild("userId").equalTo(currentUserId)
 
@@ -169,10 +186,8 @@ class MainActivity13 : AppCompatActivity() {
                 for (postSnapshot in snapshot.children) {
                     val post = postSnapshot.getValue(Post::class.java)
 
-                    // CRITICAL: Now that we save 'postId' inside the object in MainActivity16,
-                    // we can use the object directly, trusting it has the correct ID.
                     post?.let {
-                        postsList.add(it) // Add the post object directly
+                        postsList.add(it)
                     }
                 }
 
@@ -188,7 +203,6 @@ class MainActivity13 : AppCompatActivity() {
 
     /**
      * Fetches the real-time count for Following and Followers.
-     * The Followers count uses a query scan since the dedicated 'followers' node is missing.
      */
     private fun fetchFollowCounts(currentUserId: String) {
 
@@ -204,19 +218,14 @@ class MainActivity13 : AppCompatActivity() {
             }
         })
 
-        // 2. Get FOLLOWERS count (R.id.followers) - Using query scan against 'following' node.
+        // 2. Get FOLLOWERS count (R.id.followers)
         val allFollowingRef = database.getReference("following")
-        // FIX: Changed 'addEventListener' to 'addValueEventListener'
         allFollowingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var followersCount = 0
 
-                // Iterate through every user's 'following' list (e.g., Bilal, Sohaib, Abdulrehman)
                 for (userSnapshot in snapshot.children) {
-                    // Check if the current user (e.g., Bilal's profile being viewed)
-                    // is listed as a child in this user's (e.g., Sohaib's) 'following' list.
                     if (userSnapshot.hasChild(currentUserId)) {
-                        // If true, the userSnapshot.key is a FOLLOWER.
                         followersCount++
                     }
                 }
