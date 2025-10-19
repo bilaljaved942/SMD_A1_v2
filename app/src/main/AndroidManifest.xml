@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- CRITICAL FIX: Add permission for POST_NOTIFICATIONS (required for Android 13/API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature android:name="android.hardware.camera.any" />
 
@@ -25,6 +27,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirstApp">
+
+        <!-- CRITICAL FIX: Firebase Messaging Service Declaration -->
+        <!-- This is mandatory for Android to recognize your custom service -->
+        <service
+            android:name=".FirebaseNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <!-- Catches messages sent via FCM to this app -->
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".status_online"
             android:exported="false" />

@@ -57,15 +57,18 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-database-ktx")  // ✅ Already there
-    implementation("com.google.firebase:firebase-storage-ktx")   // ⭐ ADD THIS - IMPORTANT!
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // CRITICAL FIX: Missing Firebase Cloud Messaging Dependency
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     // Google Sign-In / Credentials
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    // ⭐ ADD GLIDE - IMPORTANT!
+    // GLIDE
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 

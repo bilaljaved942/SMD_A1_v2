@@ -28,6 +28,9 @@ class MainActivity22 : AppCompatActivity() {
     private lateinit var userAdapter: UserAdapter
     private val userList = ArrayList<User>()
 
+    // Store the current user's name for use in notification payloads
+    private var currentUserName: String = "A Follower"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,6 +38,9 @@ class MainActivity22 : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+
+        // CRITICAL: Ensure the current user's FCM token is saved
+        requestAndSaveFCMToken()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_find_people)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -54,10 +60,28 @@ class MainActivity22 : AppCompatActivity() {
         usersRecyclerView.adapter = userAdapter
 
         fetchUsers()
+        fetchCurrentUserName(currentUserId)
     }
 
     /**
+     * Fetches the current user's name to use in the notification payload.
+     */
+    private fun fetchCurrentUserName(currentUserId: String) {
+        database.getReference("users").child(currentUserId).child("name")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    currentUserName = snapshot.getValue(String::class.java) ?: auth.currentUser?.email ?: "A Follower"
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FindPeople", "Failed to fetch current user name: ${error.message}")
+                }
+            })
+    }
+
+
+    /**
      * Fetches all user profiles from the /users node, excluding the current user.
+     * CRITICAL: Now fetches the fcmToken.
      */
     private fun fetchUsers() {
         val usersRef = database.getReference("users")
@@ -81,16 +105,17 @@ class MainActivity22 : AppCompatActivity() {
 
                         if (name != null && name.isNotBlank()) {
                             val email = userSnapshot.child("email").getValue(String::class.java) ?: ""
-
-                            // CRITICAL: Fetch the profile picture Base64 string
                             val profilePic = userSnapshot.child("profilePicture").getValue(String::class.java)
+                            // CRITICAL: Fetch the FCM Token
+                            val fcmToken = userSnapshot.child("fcmToken").getValue(String::class.java)
 
                             userList.add(User(
                                 uid = uid,
                                 name = name,
                                 email = email,
-                                profilePictureBase64 = profilePic, // <-- ADDED
-                                isFollowing = false
+                                profilePictureBase64 = profilePic,
+                                isFollowing = false,
+                                fcmToken = fcmToken // Pass the fetched token to the User object
                             ))
                             processedUids.add(uid)
                         } else {
@@ -110,7 +135,7 @@ class MainActivity22 : AppCompatActivity() {
     }
 
     /**
-     * Checks which users the current user is already following and updates the list state.
+     * Checks which users the current user is already following and updates the list state. (No change here)
      */
     private fun fetchFollowingStatus(currentUserId: String) {
         val followingRef = database.getReference("following").child(currentUserId)
@@ -160,10 +185,49 @@ class MainActivity22 : AppCompatActivity() {
                     user.isFollowing = true
                     userAdapter.notifyItemChanged(position)
                     Toast.makeText(this, "Following ${user.name}", Toast.LENGTH_SHORT).show()
+
+                    // CRITICAL: Trigger the push notification payload log
+                    triggerNewFollowerNotification(user, currentUserId)
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Follow failed.", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    /**
+     * Simulates the secure backend call by logging the FCM payload.
+     * This is the data your Cloud Function would send to the FCM API.
+     */
+    private fun triggerNewFollowerNotification(followedUser: User, followerUid: String) {
+        val targetToken = followedUser.fcmToken
+
+        if (targetToken.isNullOrEmpty()) {
+            Log.w("FCM_FOLLOW", "User ${followedUser.name} has no FCM token. Notification skipped.")
+            return
+        }
+
+        // --- Simulated Notification Payload for New Follower ---
+        val notificationData = """
+            {
+                "to": "$targetToken",
+                "notification": {
+                    "title": "New Follower!",
+                    "body": "$currentUserName started following you.",
+                    "sound": "default"
+                },
+                "data": {
+                    "type": "NEW_FOLLOWER",
+                    "follower_uid": "$followerUid",
+                    "follower_name": "$currentUserName"
+                }
+            }
+        """.trimIndent()
+
+        Log.i("FCM_FOLLOW", "--------------------------------------------------------")
+        Log.i("FCM_FOLLOW", "BACKEND SIMULATION: New Follower Notification Triggered!")
+        Log.i("FCM_FOLLOW", "Target User: ${followedUser.name} (${followedUser.uid})")
+        Log.i("FCM_FOLLOW", "Payload SENT TO SECURE BACKEND:\n$notificationData")
+        Log.i("FCM_FOLLOW", "--------------------------------------------------------")
     }
 }
