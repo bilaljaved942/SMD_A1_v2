@@ -70,6 +70,7 @@ dependencies {
 
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.firebase.inappmessaging.display)
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     // Testing
