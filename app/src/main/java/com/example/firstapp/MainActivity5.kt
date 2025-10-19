@@ -19,24 +19,24 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 import Post
+// Assuming Post, Story, User, and DisplayStory are imported from DataModels.kt or defined elsewhere in the package
 
 const val STATIC_POST_ID = "JOSHUA_I_TOKYO_POST"
 
 class MainActivity5 : AppCompatActivity() {
 
-    // --- STORY PROPERTIES (Existing) ---
     private lateinit var storiesRecyclerView: RecyclerView
     private lateinit var storyAdapter: StoryAdapter
     private lateinit var bottomNavProfileImage: CircleImageView
-
-    // --- POST FEED PROPERTIES (New) ---
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var feedAdapter: FeedAdapter
-    private val feedPostsList = mutableListOf<Post>()
+    private val feedPostsList = mutableListOf<Post>() // Assuming Post is defined
 
-    // --- FIREBASE ---
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+
+    // Story Expiration: 30 seconds for quick testing. Change to 86400000L for 24 hours.
+    private val STORY_EXPIRATION_MS = 86400 * 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +46,13 @@ class MainActivity5 : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // --- 1. EXISTING NAVIGATION INTENTS ---
+        // --- 1. EXISTING NAVIGATION INTENTS (unchanged) ---
         findViewById<ImageView>(R.id.forward).setOnClickListener {
             startActivity(Intent(this, MainActivity8::class.java))
         }
-
         findViewById<ImageView>(R.id.batteryIcon).setOnClickListener {
             startActivity(Intent(this, MainActivity22::class.java))
         }
-
         findViewById<ImageView>(R.id.homeIcon3).setOnClickListener {
             startActivity(Intent(this, MainActivity16::class.java))
         }
@@ -67,37 +65,37 @@ class MainActivity5 : AppCompatActivity() {
 
         // --- 2. INITIALIZE PROFILE IMAGES & NAVIGATION ---
         bottomNavProfileImage = findViewById(R.id.profileImage3)
-
-        // Navigation to own profile
         bottomNavProfileImage.setOnClickListener {
             val intent = Intent(this, MainActivity13::class.java)
             startActivity(intent)
         }
-
         loadMyProfilePicture()
 
-        // --- 3. STORIES FEATURE INITIALIZATION (Existing) ---
+        // --- 3. STORIES FEATURE INITIALIZATION ---
         storiesRecyclerView = findViewById(R.id.stories_recycler_view)
         storiesRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        val initialStoryList = mutableListOf<Story>()
-        val currentUserId = auth.currentUser?.uid
-        if (currentUserId != null) {
-            initialStoryList.add(Story(id = "YOUR_STORY_PLACEHOLDER", userId = currentUserId))
-        }
-
+        val initialStoryList = mutableListOf<DisplayStory>()
         storyAdapter = StoryAdapter(initialStoryList) { story ->
-            if (story.id == "YOUR_STORY_PLACEHOLDER") {
-                if (story.imageUrl.isNotEmpty() && story.imageUrl.length > 100) {
+
+            // Story Click Handler (FIXED to use MainActivity20 for all viewing)
+            val isYourStoryPlaceholder = story.id == "YOUR_STORY_PLACEHOLDER"
+            val hasActiveStory = story.imageUrl.isNotEmpty() && story.imageUrl.length > 100
+
+            if (isYourStoryPlaceholder) {
+                if (hasActiveStory) {
+                    // YOUR STORY: Active -> Open Story Player/Manager (MainActivity20)
                     val intent = Intent(this, MainActivity20::class.java).apply {
                         putExtra("VIEW_USER_ID", story.userId)
                     }
                     startActivity(intent)
                 } else {
+                    // YOUR STORY: Empty -> Open Story Creation (MainActivity17)
                     startActivity(Intent(this, MainActivity17::class.java))
                 }
             } else {
-                val intent = Intent(this, MainActivity18::class.java).apply {
+                // FRIEND'S STORY (e.g., Sohaib's): Open Story Player (MainActivity20)
+                val intent = Intent(this, MainActivity20::class.java).apply {
                     putExtra("VIEW_USER_ID", story.userId)
                 }
                 startActivity(intent)
@@ -105,7 +103,7 @@ class MainActivity5 : AppCompatActivity() {
         }
         storiesRecyclerView.adapter = storyAdapter
 
-        // --- 4. POST FEED INITIALIZATION (New) ---
+        // --- 4. POST FEED INITIALIZATION (unchanged) ---
         feedRecyclerView = findViewById(R.id.recylerView)
         feedRecyclerView.layoutManager = LinearLayoutManager(this)
         feedAdapter = FeedAdapter(feedPostsList)
@@ -117,7 +115,7 @@ class MainActivity5 : AppCompatActivity() {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // EXISTING PROFILE & STORY LOGIC (Unchanged)
+    // PROFILE PICTURE LOADING (Unchanged)
     // ---------------------------------------------------------------------------------------------
 
     private fun loadMyProfilePicture() {
@@ -132,17 +130,13 @@ class MainActivity5 : AppCompatActivity() {
                         try {
                             val imageBytes = Base64.decode(base64Pic, Base64.NO_WRAP)
                             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-                            storyAdapter.updateProfilePicture(base64Pic)
                             bottomNavProfileImage.setImageBitmap(bitmap)
 
                         } catch (e: IllegalArgumentException) {
                             Log.e("MainActivity5", "Invalid Base64 for profile picture: ${e.message}")
-                            storyAdapter.updateProfilePicture(null)
                             bottomNavProfileImage.setImageResource(R.drawable.person2)
                         }
                     } else {
-                        storyAdapter.updateProfilePicture(null)
                         bottomNavProfileImage.setImageResource(R.drawable.person2)
                     }
                 }
@@ -153,42 +147,143 @@ class MainActivity5 : AppCompatActivity() {
             })
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // ⭐ CORE STORIES LOGIC (Unique, Filtered, Expiring) ⭐
+    // ---------------------------------------------------------------------------------------------
+
     private fun loadStoriesFromFirebase() {
-        val currentTime = System.currentTimeMillis()
-        val expirationTimeMs = 15 * 1000L
-        val expirationThreshold = currentTime - expirationTimeMs
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val currentUserId = auth.currentUser?.uid
+        if (currentUserId == null) {
+            storyAdapter.updateDisplayStories(emptyList())
+            return
+        }
 
-        FirebaseDatabase.getInstance().getReference("stories")
-            .orderByChild("timestamp")
-            .addValueEventListener(object : ValueEventListener {
+        // 1. Get the list of users the current user is following (and self)
+        getFollowingList(currentUserId) { followedUsers ->
+            val usersToFetch = followedUsers.toMutableSet().apply { add(currentUserId) }.toList()
+
+            // 2. Fetch the User data (Profile/Username) for these users.
+            fetchUserDataAndStories(usersToFetch, currentUserId)
+        }
+    }
+
+    private fun fetchUserDataAndStories(userIds: List<String>, currentUserId: String) {
+        if (userIds.isEmpty()) return
+
+        val usersRef = database.getReference("users")
+        val usersMap = mutableMapOf<String, User>()
+        var pendingUserQueries = userIds.size
+
+        // Fetch User Data for all involved users
+        for (userId in userIds) {
+            usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val allStories = mutableListOf<Story>()
+                    val user = snapshot.getValue(User::class.java)?.copy(uid = userId)
+                        ?: User(uid = userId, name = "User Missing")
 
-                    for (storySnapshot in snapshot.children) {
-                        val story = storySnapshot.getValue(Story::class.java)
-                        if (story != null && story.timestamp > expirationThreshold) {
-                            allStories.add(story)
-                        }
+                    usersMap[userId] = user
+
+                    pendingUserQueries--
+                    if (pendingUserQueries == 0) {
+                        fetchLatestStories(usersMap, currentUserId)
                     }
-
-                    val finalStoriesList = mutableListOf<Story>()
-                    if (currentUserId != null) {
-                        finalStoriesList.add(Story(id = "YOUR_STORY_PLACEHOLDER", userId = currentUserId))
-                    }
-
-                    finalStoriesList.addAll(allStories)
-                    storyAdapter.updateStories(finalStoriesList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Handle error
+                    Log.e("MainActivity5", "Failed to fetch user data for $userId: ${error.message}")
+                    pendingUserQueries--
+                    if (pendingUserQueries == 0) {
+                        fetchLatestStories(usersMap, currentUserId)
+                    }
                 }
             })
+        }
+    }
+
+    private fun fetchLatestStories(usersMap: Map<String, User>, currentUserId: String) {
+        val storiesRef = database.getReference("stories")
+        val currentTime = System.currentTimeMillis()
+        val expirationThreshold = currentTime - STORY_EXPIRATION_MS
+
+        storiesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val latestStories = mutableMapOf<String, Story>()
+                val expiredStoryIds = mutableListOf<String>()
+
+                for (storySnapshot in snapshot.children) {
+                    // Get the story and its ID
+                    val story = storySnapshot.getValue(Story::class.java)?.copy(id = storySnapshot.key!!)
+
+                    if (story != null && usersMap.containsKey(story.userId)) {
+
+                        if (story.timestamp > expirationThreshold) {
+                            // Active Story: Keep the LATEST story for each user (ensures uniqueness/no overlap)
+                            val existingStory = latestStories[story.userId]
+                            if (existingStory == null || story.timestamp > existingStory.timestamp) {
+                                latestStories[story.userId] = story
+                            }
+                        } else {
+                            // Expired Story: Mark for deletion
+                            expiredStoryIds.add(story.id)
+                        }
+                    }
+                }
+
+                // Execute the deletion of expired stories
+                deleteExpiredStories(expiredStoryIds)
+
+                // Construct the final list of DisplayStory objects
+                val finalDisplayStories = mutableListOf<DisplayStory>()
+
+                // 1. Handle "Your Story" Placeholder
+                val ownUser = usersMap[currentUserId] ?: User(uid = currentUserId, name = "Your Story")
+                val ownStory = latestStories[currentUserId]
+
+                val yourStoryPlaceholder = DisplayStory(
+                    story = Story(
+                        id = "YOUR_STORY_PLACEHOLDER",
+                        userId = currentUserId,
+                        imageUrl = ownStory?.imageUrl ?: ""
+                    ),
+                    user = ownUser.copy(name = "Your Story") // Ensure "Your Story" label is used
+                )
+                finalDisplayStories.add(yourStoryPlaceholder)
+
+                // 2. Add Followed Users' Stories (only users who have a non-expired story)
+                val followedUsersStories = latestStories.values
+                    .filter { it.userId != currentUserId }
+                    .mapNotNull { story ->
+                        usersMap[story.userId]?.let { user ->
+                            DisplayStory(story, user)
+                        }
+                    }
+                    .sortedByDescending { it.story.timestamp } // Sort by newest story first
+
+                finalDisplayStories.addAll(followedUsersStories)
+
+                storyAdapter.updateDisplayStories(finalDisplayStories)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity5", "Failed to fetch stories: ${error.message}")
+                storyAdapter.updateDisplayStories(emptyList())
+            }
+        })
+    }
+
+    private fun deleteExpiredStories(expiredStoryIds: List<String>) {
+        val storiesRef = database.getReference("stories")
+
+        expiredStoryIds.forEach { storyId ->
+            storiesRef.child(storyId).removeValue()
+                .addOnFailureListener { e ->
+                    Log.e("MainActivity5", "Failed to delete expired story: $storyId, Error: ${e.message}")
+                }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
-    // NEW POST FEED LOGIC (MODIFIED)
+    // POST FEED LOGIC (Unchanged for this solution)
     // ---------------------------------------------------------------------------------------------
 
     private fun fetchUserFeed() {
@@ -197,36 +292,25 @@ class MainActivity5 : AppCompatActivity() {
             displayDefaultPost()
             return
         }
-
-        // Step 1: Get the list of users the current user is following (and self)
         getFollowingList(currentUserId) { followedUsers ->
-            // Step 2: Fetch posts from those users
             fetchPostsFromFollowedUsers(followedUsers)
         }
     }
 
     private fun getFollowingList(currentUserId: String, callback: (List<String>) -> Unit) {
         val followingRef = database.getReference("following").child(currentUserId)
-
         followingRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val followedUsers = mutableListOf<String>()
-
-                // --- FIX APPLIED HERE: DO NOT add currentUserId ---
-                // The list will only contain UIDs of people the current user follows.
-                // followedUsers.add(currentUserId) <--- REMOVED THIS LINE
-
                 for (child in snapshot.children) {
                     followedUsers.add(child.key!!)
                 }
-
-                // If the user isn't following anyone, this list is empty, triggering the default post.
                 callback(followedUsers)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("MainActivity5", "Failed to read following list: ${error.message}")
-                callback(emptyList()) // Return empty list to prevent self-post display
+                callback(emptyList())
             }
         })
     }
