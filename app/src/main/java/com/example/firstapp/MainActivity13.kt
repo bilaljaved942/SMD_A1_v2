@@ -23,8 +23,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 
-// NOTE: Ensure 'Post' data class and 'PostsAdapter' class are correctly defined
-
 class MainActivity13 : AppCompatActivity() {
 
     private lateinit var postsRecyclerView: RecyclerView
@@ -33,14 +31,10 @@ class MainActivity13 : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
-    // References for User Info (profileImage is the main profile picture)
     private lateinit var profileNameTextView: TextView
     private lateinit var profileImageView: CircleImageView
-
-    // NEW REFERENCE: For the profile photo in the navbar/header
     private lateinit var profileImage3: CircleImageView
 
-    // References for the Count TextViews
     private lateinit var postsCountTextView: TextView
     private lateinit var followersCountTextView: TextView
     private lateinit var followingCountTextView: TextView
@@ -61,26 +55,50 @@ class MainActivity13 : AppCompatActivity() {
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // --- View Initialization ---
         profileNameTextView = findViewById(R.id.text2_1)
         profileImageView = findViewById(R.id.profileImage)
-
-        // **CRITICAL ADDITION:** Initialize the navbar profile image view
         profileImage3 = findViewById(R.id.profileImage3)
-
         val editProfileButton = findViewById<TextView>(R.id.text2_5)
-
-        // Initialize the Count TextViews with the correct, unique IDs
         postsCountTextView = findViewById(R.id.posts)
         followersCountTextView = findViewById(R.id.followers)
         followingCountTextView = findViewById(R.id.following)
 
-        // --- Click Handlers ---
+        // --- THIS IS THE NEW, DIRECT LOGOUT LOGIC ---
         findViewById<ImageView>(R.id.image3).setOnClickListener {
-            auth.signOut()
-            startActivity(Intent(this, MainActivity3::class.java))
-            finish()
+            val currentUser = auth.currentUser
+            val userId = currentUser?.uid
+
+            // 1. Check if a user is actually logged in.
+            if (userId == null) {
+                // If not, just go to the login screen without any database operations.
+                startActivity(Intent(this, MainActivity3::class.java))
+                finish()
+                return@setOnClickListener
+            }
+
+            // 2. Prepare the data to write to Firebase.
+            val statusUpdate = mapOf<String, Any>(
+                "online" to false,
+                "lastOnline" to System.currentTimeMillis()
+            )
+
+            // 3. Get the database reference and MANUALLY write 'online: false'.
+            val userStatusRef = database.getReference("users").child(userId)
+            userStatusRef.updateChildren(statusUpdate).addOnCompleteListener { task ->
+                // This 'addOnCompleteListener' ensures the next steps only run AFTER the database is updated.
+
+                // 4. Now, sign the user out.
+                auth.signOut()
+
+                // 5. Finally, navigate to the login screen.
+                val intent = Intent(this, MainActivity3::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                finish()
+            }
         }
+        // --- END OF NEW LOGIC ---
 
         editProfileButton.setOnClickListener {
             val intent = Intent(this, MainActivity15::class.java)
@@ -93,14 +111,11 @@ class MainActivity13 : AppCompatActivity() {
             insets
         }
 
-        // Setup RecyclerView for Posts
         postsRecyclerView = findViewById(R.id.posts_recycler_view)
         postsRecyclerView.layoutManager = GridLayoutManager(this, 3)
-
         postsAdapter = PostsAdapter(postsList)
         postsRecyclerView.adapter = postsAdapter
 
-        // Start data fetching
         fetchUserProfileData()
 
         findViewById<ImageView>(R.id.homeIcon).setOnClickListener {
@@ -109,104 +124,72 @@ class MainActivity13 : AppCompatActivity() {
     }
 
     //----------------------------------------------------------------------------------------------
-    // Data Fetching Logic
+    // Data Fetching Logic (All your existing code is preserved below)
     //----------------------------------------------------------------------------------------------
 
     private fun fetchUserProfileData() {
         val currentUserId = auth.currentUser?.uid
-
         if (currentUserId == null) {
             profileNameTextView.text = "Guest User"
             Log.e("MainActivity13", "User not logged in.")
             return
         }
-
         fetchUserNameAndPicture(currentUserId)
         fetchUserPosts(currentUserId)
         fetchFollowCounts(currentUserId)
     }
 
-    /**
-     * Fetches user name and profile picture and applies the image to both profileImage and profileImage3.
-     */
     private fun fetchUserNameAndPicture(userId: String) {
         val userRef = database.getReference("users").child(userId)
-
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").getValue(String::class.java)
                 profileNameTextView.text = name ?: (auth.currentUser?.email ?: "User Profile")
-
-                // **FIX:** Using the correct Firebase key based on MainActivity5: "profilePicture"
                 val base64Pic = snapshot.child("profilePicture").getValue(String::class.java)
-
                 if (base64Pic != null && base64Pic.isNotBlank()) {
                     try {
                         val imageBytes = Base64.decode(base64Pic, Base64.NO_WRAP)
                         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-                        // Apply bitmap to BOTH profile views
                         profileImageView.setImageBitmap(bitmap)
                         profileImage3.setImageBitmap(bitmap)
-
                     } catch (e: IllegalArgumentException) {
                         Log.e("Profile", "Invalid Base64 for profile picture: ${e.message}")
-
-                        // Apply default image to BOTH profile views on error
                         profileImageView.setImageResource(R.drawable.person)
                         profileImage3.setImageResource(R.drawable.person)
                     }
                 } else {
-                    // Apply default image to BOTH profile views if no picture is set
                     profileImageView.setImageResource(R.drawable.person)
                     profileImage3.setImageResource(R.drawable.person)
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Profile", "Failed to read user data: ${error.message}")
             }
         })
     }
 
-    /**
-     * Fetches posts by the current user.
-     */
     private fun fetchUserPosts(currentUserId: String) {
         val postsRef = database.getReference("images")
         val userPostsQuery = postsRef.orderByChild("userId").equalTo(currentUserId)
-
         userPostsQuery.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 postsList.clear()
-
                 val postCount = snapshot.childrenCount
                 postsCountTextView.text = postCount.toString()
-
                 for (postSnapshot in snapshot.children) {
                     val post = postSnapshot.getValue(Post::class.java)
-
-                    post?.let {
-                        postsList.add(it)
-                    }
+                    post?.let { postsList.add(it) }
                 }
-
                 postsList.reverse()
                 postsAdapter.notifyDataSetChanged()
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.e("MainActivity13", "Failed to read posts from Firebase.", error.toException())
             }
         })
     }
 
-    /**
-     * Fetches the real-time count for Following and Followers.
-     */
     private fun fetchFollowCounts(currentUserId: String) {
-
-        // 1. Get FOLLOWING count (R.id.following)
         val followingRef = database.getReference("following").child(currentUserId)
         followingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -217,19 +200,15 @@ class MainActivity13 : AppCompatActivity() {
                 Log.e("FollowCounts", "Failed to read following count.", error.toException())
             }
         })
-
-        // 2. Get FOLLOWERS count (R.id.followers)
         val allFollowingRef = database.getReference("following")
         allFollowingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var followersCount = 0
-
                 for (userSnapshot in snapshot.children) {
                     if (userSnapshot.hasChild(currentUserId)) {
                         followersCount++
                     }
                 }
-
                 followersCountTextView.text = followersCount.toString()
             }
             override fun onCancelled(error: DatabaseError) {

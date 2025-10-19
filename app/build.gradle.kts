@@ -82,4 +82,7 @@ dependencies {
 
     // Video call implementation dependency
     implementation("io.agora.rtc:full-sdk:4.6.0")
+
+    // Monitoring the life cycle
+    implementation("androidx.lifecycle:lifecycle-process:2.7.0")
 }

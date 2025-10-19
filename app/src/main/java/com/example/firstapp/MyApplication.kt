@@ -1,42 +1,102 @@
 package com.example.firstapp
 
 import android.app.Application
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class MyApplication : Application() {
 
+    private lateinit var auth: FirebaseAuth
+    private var authStateListener: FirebaseAuth.AuthStateListener? = null
+    private val appLifecycleObserver = AppLifecycleObserver()
+
+    // Store the last known user ID to correctly mark them as offline on logout.
+    private var lastLoggedInUserId: String? = null
+
     override fun onCreate() {
         super.onCreate()
-        // Enable disk persistence to cache data and work offline
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        setupPresenceSystem()
+        auth = FirebaseAuth.getInstance()
+
+        // This observer handles the app going to the background or foreground.
+        ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
+
+        // This new listener handles login and logout events instantly.
+        setupAuthStateListener()
     }
 
-    private fun setupPresenceSystem() {
-        // This setup runs when the app starts and a user is logged in.
-        FirebaseAuth.getInstance().currentUser?.let { user ->
-            val myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/${user.uid}/online")
-            val lastOnlineRef = FirebaseDatabase.getInstance().getReference("users/${user.uid}/lastOnline")
-            val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
-
-            connectedRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
-                override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
-                    val connected = snapshot.getValue(Boolean::class.java) ?: false
-                    if (connected) {
-                        // When the device is connected to Firebase, set status to online.
-                        myConnectionsRef.setValue(true)
-                        // Set up a command to mark the user as offline when they disconnect.
-                        myConnectionsRef.onDisconnect().setValue(false)
-                        // Also, set a timestamp for the last online time on disconnect.
-                        lastOnlineRef.onDisconnect().setValue(System.currentTimeMillis())
-                    }
+    private fun setupAuthStateListener() {
+        authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val user = firebaseAuth.currentUser
+            if (user != null) {
+                // --- USER HAS LOGGED IN ---
+                lastLoggedInUserId = user.uid
+                // Set up disconnection hooks for this specific user (for crashes, lost internet).
+                setupOnDisconnect(user.uid)
+                // Explicitly set the user to 'online' because they just logged in.
+                updateUserStatus(user.uid, true)
+            } else {
+                // --- USER HAS LOGGED OUT ---
+                lastLoggedInUserId?.let { uid ->
+                    // Explicitly set the last known user to 'offline' because they just logged out.
+                    updateUserStatus(uid, false)
                 }
+                lastLoggedInUserId = null
+            }
+        }
+        // Attach the listener to FirebaseAuth.
+        auth.addAuthStateListener(authStateListener!!)
+    }
 
-                override fun onCancelled(error: com.google.firebase.database.DatabaseError) {
-                    // Log error if listener is cancelled
+    /**
+     * A robust function to update a user's status.
+     */
+    private fun updateUserStatus(userId: String, isOnline: Boolean) {
+        val userStatusRef = FirebaseDatabase.getInstance().getReference("users/$userId")
+        val statusUpdate = mapOf<String, Any>(
+            "online" to isOnline,
+            "lastOnline" to System.currentTimeMillis()
+        )
+        userStatusRef.updateChildren(statusUpdate)
+    }
+
+    /**
+     * Tells Firebase to mark the user as offline if the app connection is lost unexpectedly.
+     */
+    private fun setupOnDisconnect(userId: String) {
+        val userStatusRef = FirebaseDatabase.getInstance().getReference("users/$userId")
+        val onDisconnectUpdate = mapOf<String, Any>(
+            "online" to false,
+            "lastOnline" to System.currentTimeMillis()
+        )
+        userStatusRef.onDisconnect().updateChildren(onDisconnectUpdate)
+    }
+
+    /**
+     * This inner class handles the app moving between foreground and background.
+     */
+    inner class AppLifecycleObserver : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            // Only update status if a user is currently logged in.
+            val currentUser = auth.currentUser ?: return
+
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    // App came to the foreground.
+                    updateUserStatus(currentUser.uid, true)
                 }
-            })
+                Lifecycle.Event.ON_STOP -> {
+                    // App went to the background.
+                    updateUserStatus(currentUser.uid, false)
+                }
+                else -> {
+                    // Other lifecycle events are not needed.
+                }
+            }
         }
     }
 }

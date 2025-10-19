@@ -1,16 +1,14 @@
 package com.example.firstapp
 
 import com.google.firebase.database.PropertyName
-
 data class Story(
     val id: String = "",
     val userId: String = "",
     val imageUrl: String = "",
     val timestamp: Long = 0L,
     val viewed: Boolean = false,
-    val isVideo: Boolean = false
+    val isVideo: Boolean = false // CRITICAL FIX: This field must be added
 )
-
 // UPDATED User data class
 data class User(
     val uid: String = "",

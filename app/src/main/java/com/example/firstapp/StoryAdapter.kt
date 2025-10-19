@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
-// Assuming Story, User, and DisplayStory are imported from DataModels.kt or defined elsewhere in the package
 
 class StoryAdapter(
     private var displayStories: MutableList<DisplayStory>,
-    private val clickListener: (Story) -> Unit
+    // --- FIX #1: The click listener now correctly expects a 'DisplayStory' object ---
+    private val clickListener: (DisplayStory) -> Unit
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -26,6 +25,7 @@ class StoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
+        // This assumes you have a layout file at res/layout/item_story.xml
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_story, parent, false)
         return StoryViewHolder(view)
@@ -36,13 +36,10 @@ class StoryAdapter(
         val story = displayItem.story
         val user = displayItem.user
 
-        // Determine if an active story exists
         val hasActiveStory = story.imageUrl.isNotEmpty() && story.imageUrl.length > 100
 
-        // ⭐ SET USERNAME: Use the 'name' property from the User object
         holder.username.text = user.name
 
-        // ⭐ SET PROFILE PICTURE: Use the 'profilePictureBase64' property
         val base64Pic = user.profilePictureBase64
         if (!base64Pic.isNullOrBlank()) {
             try {
@@ -54,19 +51,15 @@ class StoryAdapter(
                 holder.profileImage.setImageResource(R.drawable.person)
             }
         } else {
-            // Default image if no profile picture is set
             holder.profileImage.setImageResource(R.drawable.person)
         }
 
-        // --- LOGIC FOR "YOUR STORY" ---
         if (story.id == "YOUR_STORY_PLACEHOLDER") {
             holder.addIcon.visibility = View.VISIBLE
         } else {
-            // --- LOGIC FOR ALL OTHER USERS' STORIES ---
             holder.addIcon.visibility = View.GONE
         }
 
-        // Story Ring Logic
         if (hasActiveStory) {
             holder.ringContainer.setBackgroundResource(R.drawable.create_grad)
         } else {
@@ -75,14 +68,13 @@ class StoryAdapter(
 
 
         holder.itemView.setOnClickListener {
-            // Pass the original Story object to the click listener for navigation
-            clickListener(story)
+            // --- FIX #2: Pass the entire 'displayItem' object, not just the inner 'story' ---
+            clickListener(displayItem)
         }
     }
 
     override fun getItemCount(): Int = displayStories.size
 
-    // Updates the adapter with the combined data
     fun updateDisplayStories(newDisplayStories: List<DisplayStory>) {
         displayStories.clear()
         displayStories.addAll(newDisplayStories)
