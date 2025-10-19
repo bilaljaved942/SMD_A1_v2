@@ -46,11 +46,7 @@ class MainActivity8 : AppCompatActivity() {
         chatRecyclerView = findViewById(R.id.chat_list_recycler_view)
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // --- THIS IS THE ONLY LINE THAT HAS BEEN CHANGED ---
-        // The incorrect named argument "onChatClicked =" was removed to fix the mismatch.
         chatAdapter = ChatListAdapter(mutualFollowList, ::onChatClicked)
-        // ---------------------------------------------------
-
         chatRecyclerView.adapter = chatAdapter
 
         fetchMutualFollowingUsers()
@@ -69,15 +65,12 @@ class MainActivity8 : AppCompatActivity() {
         followingRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val myFollowingUids = snapshot.children.mapNotNull { it.key }
-
                 if (myFollowingUids.isEmpty()) {
                     chatAdapter.notifyDataSetChanged()
                     return
                 }
-
                 checkIfFollowedBack(currentUserId, myFollowingUids)
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.e("ChatList", "Failed to fetch my following list: ${error.message}")
             }
@@ -86,29 +79,23 @@ class MainActivity8 : AppCompatActivity() {
 
     private fun checkIfFollowedBack(currentUserId: String, followingUids: List<String>) {
         mutuallyFollowedUids.clear()
-
         var checksPending = followingUids.size
-
         if (checksPending == 0) {
             startProfileFetch()
             return
         }
-
         for (targetUid in followingUids) {
             val followedBackRef = database.getReference("following").child(targetUid).child(currentUserId)
-
             followedBackRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         mutuallyFollowedUids.add(targetUid)
                     }
-
                     checksPending--
                     if (checksPending == 0) {
                         startProfileFetch()
                     }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("ChatList", "Mutual check failed for $targetUid: ${error.message}")
                     checksPending--
@@ -121,12 +108,10 @@ class MainActivity8 : AppCompatActivity() {
     private fun startProfileFetch() {
         mutualFollowList.clear()
         profileFetchCounter = mutuallyFollowedUids.size
-
         if (profileFetchCounter == 0) {
             chatAdapter.notifyDataSetChanged()
             return
         }
-
         for (uid in mutuallyFollowedUids) {
             fetchProfileDetails(uid)
         }
@@ -137,17 +122,16 @@ class MainActivity8 : AppCompatActivity() {
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val name = snapshot.child("name").getValue(String::class.java) ?: "User"
-                val email = snapshot.child("email").getValue(String::class.java) ?: ""
-                val profilePic = snapshot.child("profilePicture").getValue(String::class.java)
+                // --- THIS IS THE FINAL FIX ---
+                // Instead of building the User object manually, we let Firebase do it.
+                // This automatically includes the 'online' field and all other data.
+                val user = snapshot.getValue(User::class.java)
 
-                mutualFollowList.add(User(
-                    uid = uid,
-                    name = name,
-                    email = email,
-                    profilePictureBase64 = profilePic,
-                    isFollowing = true
-                ))
+                if (user != null) {
+                    // We must still ensure the UID is set correctly from the key
+                    mutualFollowList.add(user.copy(uid = snapshot.key!!))
+                }
+                // --- END OF FIX ---
 
                 profileFetchCounter--
                 if (profileFetchCounter == 0) {
@@ -158,7 +142,6 @@ class MainActivity8 : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("ChatList", "Failed to fetch profile for $uid: ${error.message}")
-
                 profileFetchCounter--
                 if (profileFetchCounter == 0) {
                     chatAdapter.notifyDataSetChanged()

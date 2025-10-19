@@ -17,7 +17,7 @@
         app:civ_border_color="@color/LightGray"
         android:contentDescription="User Profile Picture" />
 
-    <!-- Name and Status Container -->
+    <!-- Name and Last Message Container -->
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="wrap_content"
@@ -38,12 +38,12 @@
             android:textStyle="bold"
             android:textSize="16sp"/>
 
-        <!-- REPLACED last message with status TextView -->
+        <!-- RESTORED: This TextView is now for the last message. -->
         <TextView
-            android:id="@+id/chat_user_status"
+            android:id="@+id/chat_last_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Start a conversation!"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -59,3 +59,4 @@
         android:src="@drawable/camera" />
 
 </RelativeLayout>
+
