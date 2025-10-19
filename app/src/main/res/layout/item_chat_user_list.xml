@@ -5,7 +5,7 @@
     android:paddingVertical="10dp"
     android:paddingHorizontal="16dp">
 
-    <!-- Profile Image (CircleImageView) -->
+    <!-- Profile Image (No change) -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/chat_user_profile_image"
         android:layout_width="60dp"
@@ -17,7 +17,7 @@
         app:civ_border_color="@color/LightGray"
         android:contentDescription="User Profile Picture" />
 
-    <!-- Name and Last Message Container (Centered) -->
+    <!-- Name and Status Container -->
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="wrap_content"
@@ -38,16 +38,17 @@
             android:textStyle="bold"
             android:textSize="16sp"/>
 
+        <!-- REPLACED last message with status TextView -->
         <TextView
-            android:id="@+id/chat_last_message"
+            android:id="@+id/chat_user_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Have a nice day, bro!"
+            android:text="Offline"
             android:textSize="14sp"/>
 
     </LinearLayout>
 
-    <!-- Camera Icon -->
+    <!-- Camera Icon (No change) -->
     <ImageView
         android:id="@+id/chat_camera_icon"
         android:layout_width="30dp"

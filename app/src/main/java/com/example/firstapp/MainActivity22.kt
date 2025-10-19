@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
-import User
+
 // User and UserAdapter assumed to be accessible in this package
 
 class MainActivity22 : AppCompatActivity() {

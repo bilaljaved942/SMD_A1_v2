@@ -11,13 +11,17 @@ data class Story(
     val isVideo: Boolean = false
 )
 
+// UPDATED User data class
 data class User(
     val uid: String = "",
     val name: String = "",
     val email: String = "",
     @get:PropertyName("profilePicture") @set:PropertyName("profilePicture")
     var profilePictureBase64: String? = null,
-    var isFollowing: Boolean = false
+    var isFollowing: Boolean = false,
+    // --- ADDED FOR PRESENCE ---
+    val online: Boolean = false,
+    val lastOnline: Long = 0L
 )
 
 data class DisplayStory(

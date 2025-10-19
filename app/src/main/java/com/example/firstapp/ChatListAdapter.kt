@@ -8,17 +8,54 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import User
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
-// User data class definition is assumed to be accessible
 
 class ChatListAdapter(
     private val userList: MutableList<User>,
     private val onChatClickListener: (User) -> Unit
 ) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
 
-    // Helper function to decode and set the image (Reused from MainActivity5 logic)
+    class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val profileImage: CircleImageView = view.findViewById(R.id.chat_user_profile_image)
+        val nameText: TextView = view.findViewById(R.id.chat_user_name)
+        // UPDATED: Changed from lastMessage to statusText
+        val statusText: TextView = view.findViewById(R.id.chat_user_status)
+        val cameraIcon: ImageView = view.findViewById(R.id.chat_camera_icon)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_chat_user_list, parent, false)
+        return ChatViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
+        val user = userList[position]
+        val context = holder.itemView.context
+
+        loadProfilePicture(holder.profileImage, user.profilePictureBase64)
+        holder.nameText.text = if (user.name.isNotBlank()) user.name else user.uid.substring(0, 8) + "..."
+
+        // --- UPDATED PRESENCE LOGIC ---
+        // Sets the text and color based on the 'online' field
+        if (user.online) {
+            holder.statusText.text = "Online"
+            holder.statusText.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark))
+        } else {
+            holder.statusText.text = "Offline"
+            holder.statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+        }
+        // --- END OF UPDATED CODE ---
+
+        holder.itemView.setOnClickListener {
+            onChatClickListener(user)
+        }
+    }
+
+    override fun getItemCount(): Int = userList.size
+
     private fun loadProfilePicture(imageView: CircleImageView, base64: String?) {
         if (!base64.isNullOrBlank()) {
             try {
@@ -30,45 +67,7 @@ class ChatListAdapter(
                 imageView.setImageResource(R.drawable.person)
             }
         } else {
-            // Set a default picture if no Base64 data is present
             imageView.setImageResource(R.drawable.person)
         }
     }
-
-    class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // CRITICAL FIX: Ensure this is CircleImageView to match the XML
-        val profileImage: CircleImageView = view.findViewById(R.id.chat_user_profile_image)
-        val nameText: TextView = view.findViewById(R.id.chat_user_name)
-        val lastMessage: TextView = view.findViewById(R.id.chat_last_message)
-        val cameraIcon: ImageView = view.findViewById(R.id.chat_camera_icon)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        // NOTE: Layout inflation relies on the corrected XML filename
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat_user_list, parent, false)
-        return ChatViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val user = userList[position]
-
-        // --- 1. Load Profile Picture (NEW) ---
-        // We use the profilePictureBase64 field that MainActivity8 fetched
-        loadProfilePicture(holder.profileImage, user.profilePictureBase64)
-        // -------------------------------------
-
-        // Display Name
-        holder.nameText.text = if (user.name.isNotBlank()) user.name else user.uid.substring(0, 8) + "..."
-
-        // Placeholder for last message
-        holder.lastMessage.text = "Start chatting!"
-
-        // Handle opening the chat window when the row is clicked
-        holder.itemView.setOnClickListener {
-            onChatClickListener(user)
-        }
-    }
-
-    override fun getItemCount(): Int = userList.size
 }

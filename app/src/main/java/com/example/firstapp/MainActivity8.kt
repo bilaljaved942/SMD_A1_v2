@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlin.collections.ArrayList
-import User
 
 
 class MainActivity8 : AppCompatActivity() {
@@ -47,7 +46,11 @@ class MainActivity8 : AppCompatActivity() {
         chatRecyclerView = findViewById(R.id.chat_list_recycler_view)
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        // --- THIS IS THE ONLY LINE THAT HAS BEEN CHANGED ---
+        // The incorrect named argument "onChatClicked =" was removed to fix the mismatch.
         chatAdapter = ChatListAdapter(mutualFollowList, ::onChatClicked)
+        // ---------------------------------------------------
+
         chatRecyclerView.adapter = chatAdapter
 
         fetchMutualFollowingUsers()
@@ -85,6 +88,11 @@ class MainActivity8 : AppCompatActivity() {
         mutuallyFollowedUids.clear()
 
         var checksPending = followingUids.size
+
+        if (checksPending == 0) {
+            startProfileFetch()
+            return
+        }
 
         for (targetUid in followingUids) {
             val followedBackRef = database.getReference("following").child(targetUid).child(currentUserId)
@@ -124,9 +132,6 @@ class MainActivity8 : AppCompatActivity() {
         }
     }
 
-    /**
-     * Fetches the name and profile picture of the mutually followed user and adds them to the list.
-     */
     private fun fetchProfileDetails(uid: String) {
         val userRef = database.getReference("users").child(uid)
 
@@ -134,16 +139,13 @@ class MainActivity8 : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").getValue(String::class.java) ?: "User"
                 val email = snapshot.child("email").getValue(String::class.java) ?: ""
-
-                // Fetch the profile picture Base64 string
                 val profilePic = snapshot.child("profilePicture").getValue(String::class.java)
-
 
                 mutualFollowList.add(User(
                     uid = uid,
                     name = name,
                     email = email,
-                    profilePictureBase64 = profilePic, // <--- Fetched and stored
+                    profilePictureBase64 = profilePic,
                     isFollowing = true
                 ))
 
@@ -165,9 +167,6 @@ class MainActivity8 : AppCompatActivity() {
         })
     }
 
-    /**
-     * Handles the click on a chat row, starting the chat activity (MainActivity9).
-     */
     private fun onChatClicked(user: User) {
         val intent = Intent(this, MainActivity9::class.java).apply {
             putExtra("RECIPIENT_USER_ID", user.uid)

@@ -25,6 +25,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirstApp">
+        <activity
+            android:name=".status_online"
+            android:exported="false" />
 
         <!--
         *** CRITICAL FIX: COMMENTS ACTIVITY DECLARATION ***
@@ -32,11 +35,10 @@
         -->
         <activity
             android:name=".CommentsActivity"
+            android:exported="false"
             android:label="Comments"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.FirstApp"
-            android:exported="false"/>
-
+            android:theme="@style/Theme.FirstApp" />
         <activity
             android:name=".MainActivity23"
             android:exported="false" />
@@ -118,6 +120,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
+
 
 </manifest>

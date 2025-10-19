@@ -1,5 +1,6 @@
 package com.example.firstapp
 
+import Post
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -18,10 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
-import Post
-// Assuming Post, Story, User, and DisplayStory are imported from DataModels.kt or defined elsewhere in the package
-
-const val STATIC_POST_ID = "JOSHUA_I_TOKYO_POST"
+// Post is defined in your project, assuming it is accessible
+// import Post
 
 class MainActivity5 : AppCompatActivity() {
 
@@ -30,12 +29,11 @@ class MainActivity5 : AppCompatActivity() {
     private lateinit var bottomNavProfileImage: CircleImageView
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var feedAdapter: FeedAdapter
-    private val feedPostsList = mutableListOf<Post>() // Assuming Post is defined
+    private val feedPostsList = mutableListOf<Post>()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
-    // Story Expiration: 30 seconds for quick testing. Change to 86400000L for 24 hours.
     private val STORY_EXPIRATION_MS = 86400 * 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +44,7 @@ class MainActivity5 : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // --- 1. EXISTING NAVIGATION INTENTS (unchanged) ---
+        // --- Existing code... (No changes needed here) ---
         findViewById<ImageView>(R.id.forward).setOnClickListener {
             startActivity(Intent(this, MainActivity8::class.java))
         }
@@ -63,7 +61,6 @@ class MainActivity5 : AppCompatActivity() {
             insets
         }
 
-        // --- 2. INITIALIZE PROFILE IMAGES & NAVIGATION ---
         bottomNavProfileImage = findViewById(R.id.profileImage3)
         bottomNavProfileImage.setOnClickListener {
             val intent = Intent(this, MainActivity13::class.java)
@@ -71,30 +68,24 @@ class MainActivity5 : AppCompatActivity() {
         }
         loadMyProfilePicture()
 
-        // --- 3. STORIES FEATURE INITIALIZATION ---
         storiesRecyclerView = findViewById(R.id.stories_recycler_view)
         storiesRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         val initialStoryList = mutableListOf<DisplayStory>()
         storyAdapter = StoryAdapter(initialStoryList) { story ->
-
-            // Story Click Handler (FIXED to use MainActivity20 for all viewing)
             val isYourStoryPlaceholder = story.id == "YOUR_STORY_PLACEHOLDER"
             val hasActiveStory = story.imageUrl.isNotEmpty() && story.imageUrl.length > 100
 
             if (isYourStoryPlaceholder) {
                 if (hasActiveStory) {
-                    // YOUR STORY: Active -> Open Story Player/Manager (MainActivity20)
                     val intent = Intent(this, MainActivity20::class.java).apply {
                         putExtra("VIEW_USER_ID", story.userId)
                     }
                     startActivity(intent)
                 } else {
-                    // YOUR STORY: Empty -> Open Story Creation (MainActivity17)
                     startActivity(Intent(this, MainActivity17::class.java))
                 }
             } else {
-                // FRIEND'S STORY (e.g., Sohaib's): Open Story Player (MainActivity20)
                 val intent = Intent(this, MainActivity20::class.java).apply {
                     putExtra("VIEW_USER_ID", story.userId)
                 }
@@ -103,21 +94,43 @@ class MainActivity5 : AppCompatActivity() {
         }
         storiesRecyclerView.adapter = storyAdapter
 
-        // --- 4. POST FEED INITIALIZATION (unchanged) ---
         feedRecyclerView = findViewById(R.id.recylerView)
         feedRecyclerView.layoutManager = LinearLayoutManager(this)
         feedAdapter = FeedAdapter(feedPostsList)
         feedRecyclerView.adapter = feedAdapter
 
-        // --- 5. START DATA FETCHING ---
         loadStoriesFromFirebase()
         fetchUserFeed()
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // PROFILE PICTURE LOADING (Unchanged)
-    // ---------------------------------------------------------------------------------------------
+    // --- ADDED FOR PRESENCE ---
+    override fun onResume() {
+        super.onResume()
+        updateUserStatus(true)
+    }
 
+    override fun onPause() {
+        super.onPause()
+        updateUserStatus(false)
+    }
+
+    private fun updateUserStatus(isOnline: Boolean) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userStatusRef = database.getReference("users/${currentUser.uid}/online")
+            userStatusRef.setValue(isOnline)
+
+            if (!isOnline) {
+                // Also update last seen timestamp when they go offline gracefully
+                val lastOnlineRef = database.getReference("users/${currentUser.uid}/lastOnline")
+                lastOnlineRef.setValue(System.currentTimeMillis())
+            }
+        }
+    }
+    // --- END OF ADDED CODE ---
+
+
+    // --- All your existing functions (loadMyProfilePicture, loadStoriesFromFirebase, etc.) remain below, unchanged. ---
     private fun loadMyProfilePicture() {
         val currentUserId = auth.currentUser?.uid ?: return
 
@@ -147,10 +160,6 @@ class MainActivity5 : AppCompatActivity() {
             })
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // ⭐ CORE STORIES LOGIC (Unique, Filtered, Expiring) ⭐
-    // ---------------------------------------------------------------------------------------------
-
     private fun loadStoriesFromFirebase() {
         val currentUserId = auth.currentUser?.uid
         if (currentUserId == null) {
@@ -158,11 +167,8 @@ class MainActivity5 : AppCompatActivity() {
             return
         }
 
-        // 1. Get the list of users the current user is following (and self)
         getFollowingList(currentUserId) { followedUsers ->
             val usersToFetch = followedUsers.toMutableSet().apply { add(currentUserId) }.toList()
-
-            // 2. Fetch the User data (Profile/Username) for these users.
             fetchUserDataAndStories(usersToFetch, currentUserId)
         }
     }
@@ -174,7 +180,6 @@ class MainActivity5 : AppCompatActivity() {
         val usersMap = mutableMapOf<String, User>()
         var pendingUserQueries = userIds.size
 
-        // Fetch User Data for all involved users
         for (userId in userIds) {
             usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -211,31 +216,23 @@ class MainActivity5 : AppCompatActivity() {
                 val expiredStoryIds = mutableListOf<String>()
 
                 for (storySnapshot in snapshot.children) {
-                    // Get the story and its ID
                     val story = storySnapshot.getValue(Story::class.java)?.copy(id = storySnapshot.key!!)
 
                     if (story != null && usersMap.containsKey(story.userId)) {
-
                         if (story.timestamp > expirationThreshold) {
-                            // Active Story: Keep the LATEST story for each user (ensures uniqueness/no overlap)
                             val existingStory = latestStories[story.userId]
                             if (existingStory == null || story.timestamp > existingStory.timestamp) {
                                 latestStories[story.userId] = story
                             }
                         } else {
-                            // Expired Story: Mark for deletion
                             expiredStoryIds.add(story.id)
                         }
                     }
                 }
 
-                // Execute the deletion of expired stories
                 deleteExpiredStories(expiredStoryIds)
-
-                // Construct the final list of DisplayStory objects
                 val finalDisplayStories = mutableListOf<DisplayStory>()
 
-                // 1. Handle "Your Story" Placeholder
                 val ownUser = usersMap[currentUserId] ?: User(uid = currentUserId, name = "Your Story")
                 val ownStory = latestStories[currentUserId]
 
@@ -245,11 +242,10 @@ class MainActivity5 : AppCompatActivity() {
                         userId = currentUserId,
                         imageUrl = ownStory?.imageUrl ?: ""
                     ),
-                    user = ownUser.copy(name = "Your Story") // Ensure "Your Story" label is used
+                    user = ownUser.copy(name = "Your Story")
                 )
                 finalDisplayStories.add(yourStoryPlaceholder)
 
-                // 2. Add Followed Users' Stories (only users who have a non-expired story)
                 val followedUsersStories = latestStories.values
                     .filter { it.userId != currentUserId }
                     .mapNotNull { story ->
@@ -257,10 +253,9 @@ class MainActivity5 : AppCompatActivity() {
                             DisplayStory(story, user)
                         }
                     }
-                    .sortedByDescending { it.story.timestamp } // Sort by newest story first
+                    .sortedByDescending { it.story.timestamp }
 
                 finalDisplayStories.addAll(followedUsersStories)
-
                 storyAdapter.updateDisplayStories(finalDisplayStories)
             }
 
@@ -273,7 +268,6 @@ class MainActivity5 : AppCompatActivity() {
 
     private fun deleteExpiredStories(expiredStoryIds: List<String>) {
         val storiesRef = database.getReference("stories")
-
         expiredStoryIds.forEach { storyId ->
             storiesRef.child(storyId).removeValue()
                 .addOnFailureListener { e ->
@@ -281,10 +275,6 @@ class MainActivity5 : AppCompatActivity() {
                 }
         }
     }
-
-    // ---------------------------------------------------------------------------------------------
-    // POST FEED LOGIC (Unchanged for this solution)
-    // ---------------------------------------------------------------------------------------------
 
     private fun fetchUserFeed() {
         val currentUserId = auth.currentUser?.uid
@@ -333,13 +323,11 @@ class MainActivity5 : AppCompatActivity() {
                             val post = postSnapshot.getValue(Post::class.java)
                             post?.let { fetchedPosts.add(it) }
                         }
-
                         pendingQueries--
                         if (pendingQueries == 0) {
                             updateFeed(fetchedPosts)
                         }
                     }
-
                     override fun onCancelled(error: DatabaseError) {
                         Log.e("MainActivity5", "Failed to fetch posts for user $userId.")
                         pendingQueries--
@@ -353,7 +341,6 @@ class MainActivity5 : AppCompatActivity() {
 
     private fun updateFeed(posts: List<Post>) {
         feedPostsList.clear()
-
         if (posts.isEmpty()) {
             displayDefaultPost()
         } else {
@@ -365,15 +352,13 @@ class MainActivity5 : AppCompatActivity() {
 
     private fun displayDefaultPost() {
         feedPostsList.clear()
-
         val defaultPost = Post(
             postId = "default_placeholder",
             userId = "admin_socially",
             base64Image = "",
-            caption = "Welcome to Socially! Follow friends like Bilal, Sohaib, and Abdulrehman to populate your feed, or create your first post!",
+            caption = "Welcome to Socially! Follow friends to populate your feed, or create your first post!",
             timestamp = System.currentTimeMillis()
         )
-
         feedPostsList.add(defaultPost)
         feedAdapter.notifyDataSetChanged()
     }

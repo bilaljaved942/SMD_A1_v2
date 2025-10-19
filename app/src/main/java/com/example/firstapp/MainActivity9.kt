@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.activity.result.contract.ActivityResultContracts
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity9 : AppCompatActivity() {
@@ -33,14 +36,16 @@ class MainActivity9 : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private val messageList = mutableListOf<Message>()
 
-    // --- Core Fix State ---
-    // These must be lateinit as they are set by Intent data in onCreate
+    // --- ADDED FOR PRESENCE ---
+    private lateinit var recipientStatusTextView: TextView
+    private var recipientStatusListener: ValueEventListener? = null
+    private lateinit var recipientStatusRef: DatabaseReference
+    // --- END OF ADDED CODE ---
+
     private lateinit var RECIPIENT_USER_ID: String
     private lateinit var CHAT_PATH: String
     private val CURRENT_USER_ID: String by lazy { auth.currentUser?.uid ?: "" }
-    // ----------------------
 
-    // State management
     private var messageBeingEdited: Message? = null
     private val EDIT_WINDOW_MILLIS = TimeUnit.MINUTES.toMillis(5)
 
@@ -62,33 +67,31 @@ class MainActivity9 : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // --- CORE FIX: Get Recipient ID from Intent and calculate unique path ---
         RECIPIENT_USER_ID = intent.getStringExtra("RECIPIENT_USER_ID") ?: run {
-            Toast.makeText(this, "Error: No recipient specified. Returning to chat list.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error: No recipient specified.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // This check ensures the current user is logged in before proceeding
         if (CURRENT_USER_ID.isEmpty()) {
             Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // Use the function to calculate the guaranteed unique chat path
         CHAT_PATH = getUniqueChatPath(CURRENT_USER_ID, RECIPIENT_USER_ID)
         Log.d("MainActivity9", "Unique Chat Path: $CHAT_PATH")
-        // -----------------------------------------------------------------------
 
+        // --- ADDED FOR PRESENCE ---
+        recipientStatusTextView = findViewById(R.id.online_status_text)
+        listenForRecipientStatus()
+        // --- END OF ADDED CODE ---
 
         var back=findViewById<ImageView>(R.id.image1)
         back.setOnClickListener {
-            // Changed from starting MainActivity5 to finishing, so user returns to MainActivity8 (Chat List)
             finish()
         }
 
-        // Get View References
         messageInput = findViewById(R.id.searchInput3)
         sendButton = findViewById(R.id.circle21)
         galleryButton = findViewById(R.id.circle31)
@@ -113,8 +116,6 @@ class MainActivity9 : AppCompatActivity() {
             insets
         }
 
-        // --- Core Chat Functionality ---
-
         sendButton.setOnClickListener {
             if (messageBeingEdited != null) {
                 updateMessage()
@@ -128,7 +129,6 @@ class MainActivity9 : AppCompatActivity() {
             pickImageLauncher.launch("image/*")
         }
 
-
         findViewById<ImageView>(R.id.image2).setOnClickListener {
             val intent = Intent(this, MainActivity23::class.java)
             startActivity(intent)
@@ -137,18 +137,50 @@ class MainActivity9 : AppCompatActivity() {
         fetchMessages()
     }
 
-    /**
-     * Calculates a unique chat path for any two user IDs by sorting them.
-     * This is the core fix for message overlapping: A conversation between A and B
-     * will always be stored under the same path (e.g., chats/A_B).
-     */
+    // --- ADDED FOR PRESENCE ---
+    private fun listenForRecipientStatus() {
+        recipientStatusRef = database.getReference("users/$RECIPIENT_USER_ID")
+        recipientStatusListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val isOnline = snapshot.child("online").getValue(Boolean::class.java) ?: false
+                if (isOnline) {
+                    recipientStatusTextView.text = "Online"
+                    recipientStatusTextView.setTextColor(ContextCompat.getColor(this@MainActivity9, android.R.color.holo_green_dark))
+                } else {
+                    val lastOnlineTimestamp = snapshot.child("lastOnline").getValue(Long::class.java)
+                    val lastSeen = if (lastOnlineTimestamp != null && lastOnlineTimestamp > 0) {
+                        "Last seen: ${formatTimestamp(lastOnlineTimestamp)}"
+                    } else {
+                        "Offline"
+                    }
+                    recipientStatusTextView.text = lastSeen
+                    recipientStatusTextView.setTextColor(ContextCompat.getColor(this@MainActivity9, android.R.color.darker_gray))
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                recipientStatusTextView.text = "Offline"
+            }
+        }
+        recipientStatusRef.addValueEventListener(recipientStatusListener!!)
+    }
+
+    private fun formatTimestamp(timestamp: Long): String {
+        val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Important: Remove listener to prevent memory leaks
+        recipientStatusListener?.let { recipientStatusRef.removeEventListener(it) }
+    }
+    // --- END OF ADDED CODE ---
+
+    // --- All your existing functions (getUniqueChatPath, sendMessage, etc.) remain below, unchanged. ---
     private fun getUniqueChatPath(user1: String, user2: String): String {
         val sortedUsers = listOf(user1, user2).sorted()
         return "chats/${sortedUsers[0]}_${sortedUsers[1]}"
     }
-
-
-    // --- Message Management Functions ---
 
     private fun handleMessageDeleteClick(message: Message) { deleteMessage(message) }
 
@@ -169,7 +201,6 @@ class MainActivity9 : AppCompatActivity() {
     private fun cancelEditMode() {
         messageBeingEdited = null
         messageInput.setText("")
-        // Hide soft keyboard and clear focus
         messageInput.clearFocus()
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(messageInput.windowToken, 0)
@@ -179,11 +210,9 @@ class MainActivity9 : AppCompatActivity() {
         val messageToEdit = messageBeingEdited ?: return
         val newContent = messageInput.text.toString().trim()
         if (newContent.isEmpty()) {
-            Toast.makeText(this, "Edited message cannot be empty. Delete if needed.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Edited message cannot be empty.", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Uses the calculated CHAT_PATH
         val messageNodeRef = database.getReference(CHAT_PATH).child(messageToEdit.id)
         val updates = mapOf("content" to newContent, "isEdited" to true)
         messageNodeRef.updateChildren(updates)
@@ -192,20 +221,16 @@ class MainActivity9 : AppCompatActivity() {
     }
 
     private fun deleteMessage(message: Message) {
-        // Uses the calculated CHAT_PATH
         database.getReference(CHAT_PATH).child(message.id).removeValue()
             .addOnSuccessListener { Toast.makeText(this, "Message deleted.", Toast.LENGTH_SHORT).show() }
             .addOnFailureListener { e -> Toast.makeText(this, "Deletion failed: ${e.message}", Toast.LENGTH_LONG).show() }
     }
-
-    // --- Sending Functions ---
 
     private fun sendMessage() {
         val messageContent = messageInput.text.toString().trim()
         val senderId = CURRENT_USER_ID
         if (senderId.isEmpty() || messageContent.isEmpty()) return
 
-        // Uses the calculated CHAT_PATH
         val messageRef = database.getReference(CHAT_PATH).push()
         val messageId = messageRef.key ?: return
 
@@ -217,7 +242,6 @@ class MainActivity9 : AppCompatActivity() {
             timestamp = System.currentTimeMillis(),
             type = "text"
         )
-
         messageRef.setValue(message).addOnSuccessListener {
             messageInput.setText("")
         }.addOnFailureListener { e -> Log.e("Chat", "Error sending message.", e) }
@@ -229,11 +253,8 @@ class MainActivity9 : AppCompatActivity() {
         Toast.makeText(this, "Processing image...", Toast.LENGTH_SHORT).show()
         try {
             val imageBase64 = uriToBase64(uri)
-
-            // Uses the calculated CHAT_PATH
             val messageRef = database.getReference(CHAT_PATH).push()
             val messageId = messageRef.key ?: return
-
             val message = Message(
                 id = messageId,
                 senderId = senderId,
@@ -243,7 +264,6 @@ class MainActivity9 : AppCompatActivity() {
                 mediaBase64 = imageBase64,
                 type = "image"
             )
-
             messageRef.setValue(message).addOnSuccessListener {
                 messageInput.setText("")
                 Toast.makeText(this, "Image sent!", Toast.LENGTH_SHORT).show()
@@ -264,7 +284,6 @@ class MainActivity9 : AppCompatActivity() {
     }
 
     private fun fetchMessages() {
-        // Uses the calculated CHAT_PATH
         val chatRef = database.getReference(CHAT_PATH)
         val allMessagesQuery = chatRef.orderByChild("timestamp")
 
