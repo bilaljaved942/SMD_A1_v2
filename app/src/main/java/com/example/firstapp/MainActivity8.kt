@@ -3,39 +3,58 @@ package com.example.firstapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import kotlin.collections.ArrayList
+import com.example.firstapp.repository.FollowRepository
+import com.example.firstapp.repository.UserRepository
+import com.example.firstapp.utils.SecurePreferences
+import com.example.firstapp.utils.NetworkUtils
+import kotlinx.coroutines.launch
 
-
+/**
+ * MainActivity8 - Chat List Activity (REFACTORED FOR REST APIs)
+ * 
+ * Shows list of mutual followers (users who follow you and you follow them)
+ * Click on a user to open chat conversation
+ */
 class MainActivity8 : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var database: FirebaseDatabase
+    // Repositories
+    private lateinit var followRepository: FollowRepository
+    private lateinit var userRepository: UserRepository
+    private lateinit var prefs: SecurePreferences
+
+    // UI Components
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var chatAdapter: ChatListAdapter
+    private lateinit var loadingProgressBar: ProgressBar
+    
     private val mutualFollowList = ArrayList<User>()
-
-    private val mutuallyFollowedUids = ArrayList<String>()
-    private var profileFetchCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main8)
 
-        auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance()
+        // Initialize repositories
+        followRepository = FollowRepository(this)
+        userRepository = UserRepository(this)
+        prefs = SecurePreferences(this)
+
+        // Check if logged in
+        if (!prefs.isLoggedIn()) {
+            finish()
+            return
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -43,118 +62,114 @@ class MainActivity8 : AppCompatActivity() {
             insets
         }
 
+        setupViews()
+        loadMutualFollowers()
+    }
+
+    private fun setupViews() {
+        // Back button
+        findViewById<ImageView>(R.id.image1)?.setOnClickListener {
+            finish()
+        }
+
+        // Loading indicator (add to layout if doesn't exist)
+        // loadingProgressBar = findViewById(R.id.loadingProgressBar)
+
+        // Chat list RecyclerView
         chatRecyclerView = findViewById(R.id.chat_list_recycler_view)
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
         chatAdapter = ChatListAdapter(mutualFollowList, ::onChatClicked)
         chatRecyclerView.adapter = chatAdapter
-
-        fetchMutualFollowingUsers()
-
-        findViewById<ImageView>(R.id.image1)?.setOnClickListener {
-            finish()
-        }
     }
 
-    private fun fetchMutualFollowingUsers() {
-        val currentUserId = auth.currentUser?.uid
-        if (currentUserId == null) return
+    /**
+     * Load mutual followers (users who follow you and you follow back)
+     */
+    private fun loadMutualFollowers() {
+        // Show loading
+        // loadingProgressBar?.visibility = View.VISIBLE
 
-        val followingRef = database.getReference("following").child(currentUserId)
-
-        followingRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val myFollowingUids = snapshot.children.mapNotNull { it.key }
-                if (myFollowingUids.isEmpty()) {
+        lifecycleScope.launch {
+            try {
+                val result = followRepository.getMutualFollowers()
+                
+                result.onSuccess { users ->
+                    mutualFollowList.clear()
+                    
+                    // Convert UserEntity to User (legacy model for adapter)
+                    val convertedUsers = users.map { userEntity ->
+                        User(
+                            uid = userEntity.uid.toString(),
+                            name = userEntity.name,
+                            email = userEntity.email,
+                            profilePicture = userEntity.profilePictureBase64,
+                            coverPhoto = userEntity.coverPhotoBase64,
+                            bio = userEntity.bio,
+                            online = userEntity.online,
+                            lastOnline = userEntity.lastOnline
+                        )
+                    }.sortedBy { it.name }
+                    
+                    mutualFollowList.addAll(convertedUsers)
                     chatAdapter.notifyDataSetChanged()
-                    return
-                }
-                checkIfFollowedBack(currentUserId, myFollowingUids)
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("ChatList", "Failed to fetch my following list: ${error.message}")
-            }
-        })
-    }
-
-    private fun checkIfFollowedBack(currentUserId: String, followingUids: List<String>) {
-        mutuallyFollowedUids.clear()
-        var checksPending = followingUids.size
-        if (checksPending == 0) {
-            startProfileFetch()
-            return
-        }
-        for (targetUid in followingUids) {
-            val followedBackRef = database.getReference("following").child(targetUid).child(currentUserId)
-            followedBackRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        mutuallyFollowedUids.add(targetUid)
-                    }
-                    checksPending--
-                    if (checksPending == 0) {
-                        startProfileFetch()
+                    
+                    Log.d("MainActivity8", "Loaded ${users.size} mutual followers")
+                    
+                    if (users.isEmpty()) {
+                        Toast.makeText(
+                            this@MainActivity8,
+                            "No mutual followers yet. Follow someone back!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("ChatList", "Mutual check failed for $targetUid: ${error.message}")
-                    checksPending--
-                    if (checksPending == 0) startProfileFetch()
+                
+                result.onFailure { error ->
+                    Log.e("MainActivity8", "Failed to load mutual followers: ${error.message}")
+                    
+                    if (!NetworkUtils.isNetworkAvailable(this@MainActivity8)) {
+                        Toast.makeText(
+                            this@MainActivity8,
+                            "No internet connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity8,
+                            "Failed to load chat list: ${error.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            })
-        }
-    }
-
-    private fun startProfileFetch() {
-        mutualFollowList.clear()
-        profileFetchCounter = mutuallyFollowedUids.size
-        if (profileFetchCounter == 0) {
-            chatAdapter.notifyDataSetChanged()
-            return
-        }
-        for (uid in mutuallyFollowedUids) {
-            fetchProfileDetails(uid)
-        }
-    }
-
-    private fun fetchProfileDetails(uid: String) {
-        val userRef = database.getReference("users").child(uid)
-
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // --- THIS IS THE FINAL FIX ---
-                // Instead of building the User object manually, we let Firebase do it.
-                // This automatically includes the 'online' field and all other data.
-                val user = snapshot.getValue(User::class.java)
-
-                if (user != null) {
-                    // We must still ensure the UID is set correctly from the key
-                    mutualFollowList.add(user.copy(uid = snapshot.key!!))
-                }
-                // --- END OF FIX ---
-
-                profileFetchCounter--
-                if (profileFetchCounter == 0) {
-                    mutualFollowList.sortBy { it.name }
-                    chatAdapter.notifyDataSetChanged()
-                }
+            } catch (e: Exception) {
+                Log.e("MainActivity8", "Error loading mutual followers: ${e.message}", e)
+                Toast.makeText(
+                    this@MainActivity8,
+                    "Error: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                // Hide loading
+                // loadingProgressBar?.visibility = View.GONE
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("ChatList", "Failed to fetch profile for $uid: ${error.message}")
-                profileFetchCounter--
-                if (profileFetchCounter == 0) {
-                    chatAdapter.notifyDataSetChanged()
-                }
-            }
-        })
+        }
     }
 
+    /**
+     * Handle chat item click
+     */
     private fun onChatClicked(user: User) {
         val intent = Intent(this, MainActivity9::class.java).apply {
             putExtra("RECIPIENT_USER_ID", user.uid)
             putExtra("RECIPIENT_NAME", user.name)
         }
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh list when returning to this activity
+        loadMutualFollowers()
     }
 }

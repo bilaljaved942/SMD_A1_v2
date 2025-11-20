@@ -23,6 +23,9 @@ data class User(
     val email: String = "",
     @get:PropertyName("profilePicture") @set:PropertyName("profilePicture")
     var profilePictureBase64: String? = null,
+    var profilePicture: String? = null,
+    var coverPhoto: String? = null,
+    var bio: String? = null,
     /**
      * CRITICAL: FCM Token is needed to address the user's device for notifications.
      */

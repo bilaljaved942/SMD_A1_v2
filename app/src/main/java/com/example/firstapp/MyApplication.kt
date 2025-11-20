@@ -1,6 +1,13 @@
 package com.example.firstapp
 
 import android.app.Application
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.firstapp.workers.OfflineSyncWorker
+import java.util.concurrent.TimeUnit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -27,6 +34,25 @@ class MyApplication : Application() {
 
         // This new listener handles login and logout events instantly.
         setupAuthStateListener()
+
+        // Schedule background offline sync (periodic, network required)
+        scheduleOfflineSync()
+    }
+
+    private fun scheduleOfflineSync() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val periodicWork = PeriodicWorkRequestBuilder<OfflineSyncWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "offline_sync_periodic",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            periodicWork
+        )
     }
 
     private fun setupAuthStateListener() {

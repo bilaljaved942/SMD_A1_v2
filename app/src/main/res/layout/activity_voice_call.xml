@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="16dp">
+
+    <!-- Top section with recipient info -->
+    <LinearLayout
+        android:id="@+id/topSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/recipientNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Name"
+            android:textSize="28sp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/callStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calling..."
+            android:textSize="16sp"
+            android:textColor="@color/LightGray"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/callDurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Bottom control buttons -->
+    <LinearLayout
+        android:id="@+id/controlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- Mute button -->
+        <ImageButton
+            android:id="@+id/muteButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/mic"
+            android:scaleType="centerInside"
+            android:padding="18dp"
+            android:layout_margin="12dp"
+            android:contentDescription="Mute" />
+
+        <!-- End call button -->
+        <ImageButton
+            android:id="@+id/endCallButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/red_circle"
+            android:src="@drawable/call_end"
+            android:scaleType="centerInside"
+            android:padding="18dp"
+            android:layout_margin="12dp"
+            android:contentDescription="End call" />
+
+        <!-- Speaker button -->
+        <ImageButton
+            android:id="@+id/speakerButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/speaker"
+            android:scaleType="centerInside"
+            android:padding="18dp"
+            android:layout_margin="12dp"
+            android:contentDescription="Speaker" />
+
+    </LinearLayout>
+
+</RelativeLayout>

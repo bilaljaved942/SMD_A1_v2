@@ -36,7 +36,8 @@ class MessageAdapter(
     private val currentUserId: String,
     // Handlers passed from the Activity
     private val onClickForDelete: (Message) -> Unit,
-    private val onLongClickForEdit: (Message) -> Unit
+    private val onLongClickForEdit: (Message) -> Unit,
+    private val onJoinCallClick: ((Message) -> Unit)? = null // New parameter for joining calls
 ) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     private val EDIT_WINDOW_MILLIS = TimeUnit.MINUTES.toMillis(5)
@@ -46,6 +47,7 @@ class MessageAdapter(
     private val VIEW_TYPE_RECEIVED_TEXT = 2
     private val VIEW_TYPE_SENT_IMAGE = 3
     private val VIEW_TYPE_RECEIVED_IMAGE = 4
+    private val VIEW_TYPE_CALL_INVITE = 5 // New view type
 
     // Base ViewHolder
     open class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -62,14 +64,21 @@ class MessageAdapter(
         val editIndicator: TextView? = view.findViewById(R.id.image_edit_indicator)
     }
 
+    class CallInviteViewHolder(view: View) : MessageViewHolder(view) {
+        val callInviteText: TextView = view.findViewById(R.id.call_invite_text)
+        val callTypeIcon: ImageView = view.findViewById(R.id.call_type_icon)
+        val joinCallButton: android.widget.Button = view.findViewById(R.id.join_call_button)
+        val messageTime: TextView = view.findViewById(R.id.call_message_time)
+    }
+
     override fun getItemViewType(position: Int): Int {
         val message = messageList[position]
         val isSender = message.senderId == currentUserId
 
-        return if (message.type == "image") {
-            if (isSender) VIEW_TYPE_SENT_IMAGE else VIEW_TYPE_RECEIVED_IMAGE
-        } else { // type == "text"
-            if (isSender) VIEW_TYPE_SENT_TEXT else VIEW_TYPE_RECEIVED_TEXT
+        return when {
+            message.type == "call_invite" -> VIEW_TYPE_CALL_INVITE
+            message.type == "image" -> if (isSender) VIEW_TYPE_SENT_IMAGE else VIEW_TYPE_RECEIVED_IMAGE
+            else -> if (isSender) VIEW_TYPE_SENT_TEXT else VIEW_TYPE_RECEIVED_TEXT
         }
     }
 
@@ -81,6 +90,7 @@ class MessageAdapter(
             VIEW_TYPE_RECEIVED_TEXT -> TextViewHolder(inflater.inflate(R.layout.item_message_received, parent, false))
             VIEW_TYPE_SENT_IMAGE -> ImageViewHolder(inflater.inflate(R.layout.item_message_image, parent, false))
             VIEW_TYPE_RECEIVED_IMAGE -> ImageViewHolder(inflater.inflate(R.layout.item_message_image_received, parent, false))
+            VIEW_TYPE_CALL_INVITE -> CallInviteViewHolder(inflater.inflate(R.layout.item_message_call_invite, parent, false))
 
             else -> throw IllegalArgumentException("Invalid view type: $viewType")
         }
@@ -98,6 +108,23 @@ class MessageAdapter(
         holder.itemView.setOnLongClickListener(null)
 
         when (holder) {
+            is CallInviteViewHolder -> {
+                holder.messageTime.text = formattedTime
+                val callTypeText = if (message.callType == "video") "Video Call" else "Voice Call"
+                holder.callInviteText.text = callTypeText
+                
+                // Set icon based on call type
+                if (message.callType == "video") {
+                    holder.callTypeIcon.setImageResource(R.drawable.img19)
+                } else {
+                    holder.callTypeIcon.setImageResource(R.drawable.call)
+                }
+
+                // Handle Join Call button click
+                holder.joinCallButton.setOnClickListener {
+                    onJoinCallClick?.invoke(message)
+                }
+            }
             is TextViewHolder -> {
                 holder.messageTime?.text = formattedTime
                 holder.messageBody.text = message.content

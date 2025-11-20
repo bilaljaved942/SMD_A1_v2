@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <!-- Remote video (full screen) -->
+    <FrameLayout
+        android:id="@+id/remoteVideoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black" />
+
+    <!-- Local video (small preview in corner) -->
+    <FrameLayout
+        android:id="@+id/localVideoContainer"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/gray_rect"
+        android:elevation="8dp" />
+
+    <!-- Top section with recipient info -->
+    <LinearLayout
+        android:id="@+id/topSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#80000000">
+
+        <TextView
+            android:id="@+id/recipientNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Name"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/callStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connecting..."
+            android:textSize="14sp"
+            android:textColor="@color/LightGray"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/callDurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- Bottom control buttons -->
+    <LinearLayout
+        android:id="@+id/controlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- Camera button -->
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/cam"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Camera" />
+
+        <!-- Mute button -->
+        <ImageButton
+            android:id="@+id/muteButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/mic"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Mute" />
+
+        <!-- End call button -->
+        <ImageButton
+            android:id="@+id/endCallButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/red_circle"
+            android:src="@drawable/call_end"
+            android:scaleType="centerInside"
+            android:padding="18dp"
+            android:layout_margin="8dp"
+            android:contentDescription="End call" />
+
+        <!-- Speaker button -->
+        <ImageButton
+            android:id="@+id/speakerButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/speaker"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Speaker" />
+
+        <!-- Switch camera button -->
+        <ImageButton
+            android:id="@+id/switchCameraButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_border"
+            android:src="@drawable/camera_shape"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Switch Camera" />
+
+    </LinearLayout>
+
+</RelativeLayout>

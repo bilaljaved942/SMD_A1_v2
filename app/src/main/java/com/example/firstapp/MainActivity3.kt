@@ -21,25 +21,19 @@ class MainActivity3 : AppCompatActivity() {
             insets
         }
 
-        // Click on an ImageView → go back to MainActivity2
-        val imageView = findViewById<TextView>(R.id.signUp)
-        imageView.setOnClickListener {
-            val intent = Intent(this, MainActivity2::class.java)
-            startActivity(intent)
+        // Sign Up button -> SignupActivity (MainActivity2 layout)
+        findViewById<TextView>(R.id.signUp).setOnClickListener {
+            startActivity(Intent(this, com.example.firstapp.ui.auth.SignupActivity::class.java))
         }
 
-        // Click on a TextView → go to MainActivity4
-        val textView = findViewById<TextView>(R.id.loginBtn)
-        textView.setOnClickListener {
-            val intent = Intent(this, MainActivity5::class.java)
-            startActivity(intent)
+        // Login button -> unified LoginActivity
+        findViewById<TextView>(R.id.loginBtn).setOnClickListener {
+            startActivity(Intent(this, com.example.firstapp.ui.auth.LoginActivity::class.java))
         }
 
-
-        val tV = findViewById<TextView>(R.id.switchAccount)
-        textView.setOnClickListener {
-            val intent = Intent(this, MainActivity4::class.java)
-            startActivity(intent)
+        // Optional: Switch account link also goes to LoginActivity
+        findViewById<TextView>(R.id.switchAccount)?.setOnClickListener {
+            startActivity(Intent(this, com.example.firstapp.ui.auth.LoginActivity::class.java))
         }
     }
 }
