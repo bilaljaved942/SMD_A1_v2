@@ -86,12 +86,12 @@
                android:layout_height="wrap_content"
                android:orientation="vertical">
                <TextView
-                   android:id="@+id/text1"
+                   android:id="@+id/recipient_name_text"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:textStyle="bold"
                    android:textSize="20dp"
-                   android:text="internshala" />
+                   android:text="User Name" />
 
                <!-- ADDED: TextView for online status -->
                <TextView
@@ -107,6 +107,17 @@
 
        </LinearLayout>
 
+
+        <ImageView
+            android:id="@+id/voice_call_button"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/image2"
+            android:layout_centerVertical="true"
+            android:tint="@color/Red"
+            android:src="@drawable/call" />
 
         <ImageView
             android:id="@+id/image2"

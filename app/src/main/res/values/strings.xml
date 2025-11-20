@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">firstApp</string>
+    <string name="connected">Connected</string>
+    <string name="call_in_progress">Call in progress</string>
 </resources>
